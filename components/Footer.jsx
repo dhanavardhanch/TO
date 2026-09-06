@@ -4,7 +4,7 @@ export default function Footer() {
     { label: 'About', href: '/about' },
     { label: 'Products', href: '/products' },
     { label: 'Grades', href: '/#grades' },
-    { label: 'Gifting', href: '/#gifting' },
+    { label: 'Gifting', href: '/gifting' },
     { label: 'Contact', href: '/contact' },
   ];
 
