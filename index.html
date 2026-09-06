@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Original — From the Cashew Capital, Palasa</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Stand-in for TT Firs Neue Var / Ageo (both are licensed/personal-use fonts).
+     Swap the font-family below for your licensed font once you self-host it. -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy-deep: #14212C;
+    --navy: #1C2B38;
+    --navy-soft: #26394A;
+    --gold: #C9A455;
+    --gold-soft: #B98A2E;
+    --cream: #FAF7F1;
+    --paper: #F3EEE2;
+
+    /* rename this one variable if/when you self-host the licensed font */
+    --display: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+    --sans: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --nav-h: 64px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--navy-deep);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family: inherit; border:none; background:none; cursor:pointer; }
+  ::selection{ background: var(--gold); color: var(--cream); }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--gold-soft);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------------- NAV ---------------- */
+
+  .nav-wrap{
+    position: fixed;
+    top: 18px; left: 0; right: 0;
+    display:flex; justify-content:center;
+    z-index: 100;
+    padding: 0 20px;
+  }
+
+  .nav{
+    width: 100%;
+    max-width: 880px;
+    height: var(--nav-h);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 0 10px 0 14px;
+    border-radius: 999px;
+    background: rgba(250, 247, 241, 0.55);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(20,33,44,0.08);
+    box-shadow: 0 10px 30px rgba(20,33,44,0.06);
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+  }
+
+  .nav-wrap.scrolled .nav{
+    background: rgba(250, 247, 241, 0.88);
+    box-shadow: 0 12px 30px rgba(20,33,44,0.1);
+  }
+
+  .brand{ display:flex; align-items:center; gap: 10px; }
+
+  .brand-mark{
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--gold-soft);
+    flex-shrink: 0;
+  }
+
+  .brand-name{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--navy-deep);
+    white-space: nowrap;
+  }
+
+  .nav-links{ display:flex; align-items:center; gap: 4px; }
+
+  .nav-links a{
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(20,33,44,0.72);
+    padding: 8px 16px;
+    border-radius: 999px;
+    transition: color 0.25s ease, background 0.25s ease;
+  }
+  .nav-links a:hover{
+    color: var(--navy-deep);
+    background: rgba(201,164,85,0.14);
+  }
+
+  .nav-cta{
+    margin-left: 4px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--cream);
+    background: var(--navy-deep);
+    padding: 9px 18px;
+    border-radius: 999px;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .nav-cta:hover{ background: var(--gold-soft); transform: translateY(-1px); }
+
+  .nav-toggle{
+    display:none;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    align-items:center; justify-content:center;
+    color: var(--navy-deep);
+  }
+  .nav-toggle span{
+    display:block; width: 18px; height: 1.5px;
+    background: currentColor; position: relative;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle span::before, .nav-toggle span::after{
+    content:""; position:absolute; left:0; width:18px; height:1.5px;
+    background: currentColor;
+    transition: transform 0.3s ease, top 0.3s ease;
+  }
+  .nav-toggle span::before{ top:-6px; }
+  .nav-toggle span::after{ top:6px; }
+  .nav-toggle.open span{ background: transparent; }
+  .nav-toggle.open span::before{ transform: rotate(45deg); top:0; }
+  .nav-toggle.open span::after{ transform: rotate(-45deg); top:0; }
+
+  .mobile-menu{
+    position: fixed;
+    top: calc(18px + var(--nav-h) + 10px);
+    left: 20px; right: 20px;
+    z-index: 99;
+    background: rgba(250, 247, 241, 0.96);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(20,33,44,0.08);
+    border-radius: 22px;
+    padding: 10px;
+    display: flex; flex-direction: column; gap: 2px;
+    opacity: 0; transform: translateY(-8px); pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 20px 40px rgba(20,33,44,0.1);
+  }
+  .mobile-menu.open{ opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .mobile-menu a{
+    color: var(--navy-deep); font-weight: 500; font-size: 16px;
+    padding: 14px 16px; border-radius: 14px;
+  }
+  .mobile-menu a:active{ background: rgba(201,164,85,0.12); }
+
+  /* ---------------- HERO ---------------- */
+
+  .hero{
+    position: relative;
+    min-height: 100svh;
+    width: 100%;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: calc(var(--nav-h) + 40px);
+    overflow: hidden;
+  }
+
+  .hero-label{
+    position:absolute;
+    top: calc(18px + var(--nav-h) + 30px);
+    left: 32px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(20,33,44,0.55);
+    z-index: 5;
+  }
+
+  .hero-label.right{ left:auto; right: 32px; text-align:right; }
+
+  .hero-stage{
+    position: relative;
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+    z-index: 3;
+  }
+
+  .hero-heading{
+    font-family: var(--display);
+    text-align: center;
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-heading .row{
+    display:block;
+    font-size: clamp(2.6rem, 8vw, 6.4rem);
+    font-weight: 600;
+    color: var(--navy-deep);
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .hero-heading .row.gold{ color: var(--gold-soft); }
+
+  .hero-heading .row.top{ animation: riseIn 0.9s cubic-bezier(.19,1,.22,1) 0.2s forwards; }
+  .hero-heading .row.bottom{ animation: riseIn 0.9s cubic-bezier(.19,1,.22,1) 0.35s forwards; }
+
+  @keyframes riseIn{ to{ opacity: 1; transform: translateY(0); } }
+
+  /* the video sits ON TOP of the heading, overlapping both lines,
+     the same way the thali photo overlaps the headline in the reference */
+  .hero-media{
+    position: relative;
+    width: min(560px, 78vw);
+    aspect-ratio: 16 / 10;
+    margin: -3.4vw auto -2vw;
+    z-index: 4;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 60px rgba(20,33,44,0.22),
+      0 8px 20px rgba(20,33,44,0.12);
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    animation: riseIn 1s cubic-bezier(.19,1,.22,1) 0.5s forwards;
+  }
+
+  .hero-fallback{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(120% 90% at 25% 15%, rgba(201,164,85,0.28), transparent 55%),
+      linear-gradient(150deg, #1C2B38 0%, #223547 55%, #2C4155 100%);
+    background-size: 140% 140%;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient{
+    0%{ background-position: 0% 0%; }
+    100%{ background-position: 100% 40%; }
+  }
+
+  .hero-video{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .hero-video.is-ready{ opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero-fallback{ animation:none; }
+  }
+
+  .hero-sub-row{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 4.5vw;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: riseIn 0.9s cubic-bezier(.19,1,.22,1) 0.75s forwards;
+  }
+
+  .hero-sub{
+    max-width: 34ch;
+    color: rgba(20,33,44,0.66);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .hero-actions{ display:flex; align-items:center; gap: 22px; flex-wrap: wrap; }
+
+  .btn-primary{
+    background: var(--navy-deep);
+    color: var(--cream);
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 15px 28px;
+    border-radius: 999px;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .btn-primary:hover{ background: var(--gold-soft); transform: translateY(-2px); }
+
+  .btn-ghost{
+    color: var(--navy-deep);
+    font-size: 14.5px;
+    font-weight: 600;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(20,33,44,0.3);
+    transition: border-color 0.25s ease, color 0.25s ease;
+  }
+  .btn-ghost:hover{ border-color: var(--gold-soft); color: var(--gold-soft); }
+
+  /* ---------------- SECTION COMMON ---------------- */
+
+  .section{
+    position: relative;
+    width: 100%;
+    padding: 130px 32px;
+  }
+
+  .section-inner{
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .section-tag{
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold-soft);
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .section-title{
+    font-family: var(--display);
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 600;
+    color: var(--navy-deep);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 36px;
+  }
+
+  .section-reveal{
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.85s cubic-bezier(0.19, 1, 0.22, 1), transform 0.85s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .section-reveal.is-revealed{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------------- ABOUT SECTION ---------------- */
+
+  .about{
+    background: var(--cream);
+    border-top: 1px solid rgba(20,33,44,0.06);
+  }
+
+  .about-narrative{
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 80px;
+  }
+
+  .about-lead{
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.5;
+    color: var(--navy-deep);
+    font-weight: 500;
+  }
+
+  .about-body{
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(20,33,44,0.72);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Editorial Layered Feature (reusing hero layout pattern) */
+  .editorial-stage{
+    position: relative;
+    background: var(--paper);
+    border-radius: 36px;
+    padding: 70px 48px 60px;
+    margin-top: 40px;
+    overflow: hidden;
+  }
+
+  .editorial-heading{
+    font-family: var(--display);
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .editorial-heading .row{
+    display: block;
+    font-size: clamp(2.2rem, 6vw, 4.8rem);
+    font-weight: 600;
+    color: var(--navy-deep);
+  }
+
+  .editorial-heading .row.gold{
+    color: var(--gold-soft);
+  }
+
+  .editorial-media{
+    position: relative;
+    width: min(480px, 82vw);
+    margin: -2.5vw auto -1.5vw;
+    z-index: 4;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow:
+      0 26px 50px rgba(20,33,44,0.16),
+      0 6px 18px rgba(20,33,44,0.08);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+  }
+
+  .editorial-media img{
+    width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .provenance-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(20,33,44,0.1);
+  }
+
+  .provenance-item{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .provenance-num{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold-soft);
+  }
+
+  .provenance-title{
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy-deep);
+  }
+
+  .provenance-desc{
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(20,33,44,0.68);
+  }
+
+  /* ---------------- PRODUCTS SECTION ---------------- */
+
+  .products{
+    background: var(--paper);
+  }
+
+  .products-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+
+  .products-header-text{
+    max-width: 600px;
+  }
+
+  .products-header-text .section-title{
+    margin-bottom: 12px;
+  }
+
+  .products-header-sub{
+    font-size: 16px;
+    color: rgba(20,33,44,0.68);
+    line-height: 1.6;
+  }
+
+  .products-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .product-entry{
+    background: var(--cream);
+    border-radius: 28px;
+    padding: 36px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(20,33,44,0.06);
+    transition: transform 0.3s ease;
+  }
+
+  .product-entry:hover{
+    transform: translateY(-3px);
+  }
+
+  .product-tag{
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--gold-soft);
+    margin-bottom: 16px;
+  }
+
+  .product-name{
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  .product-desc{
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: rgba(20,33,44,0.7);
+    margin-bottom: 24px;
+  }
+
+  .product-specs{
+    font-size: 13px;
+    color: rgba(20,33,44,0.52);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(20,33,44,0.08);
+  }
+
+  .product-bottom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .product-price{
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy-deep);
+  }
+
+  .product-cta{
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--cream);
+    background: var(--navy-deep);
+    padding: 10px 20px;
+    border-radius: 999px;
+    transition: background 0.25s ease;
+  }
+
+  .product-cta:hover{
+    background: var(--gold-soft);
+  }
+
+  /* ---------------- CONTACT / FOOTER ---------------- */
+
+  .contact{
+    background: var(--cream);
+    border-top: 1px solid rgba(20,33,44,0.08);
+    padding-bottom: 60px;
+  }
+
+  .contact-layout{
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    margin-bottom: 90px;
+  }
+
+  .contact-info{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .contact-info p{
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(20,33,44,0.72);
+  }
+
+  .contact-details{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14.5px;
+    color: var(--navy-deep);
+  }
+
+  .contact-box{
+    background: var(--paper);
+    border-radius: 28px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid rgba(20,33,44,0.06);
+  }
+
+  .contact-box-title{
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--navy-deep);
+  }
+
+  .contact-box-desc{
+    font-size: 14px;
+    color: rgba(20,33,44,0.68);
+    line-height: 1.55;
+  }
+
+  .contact-form{
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .contact-input{
+    flex: 1;
+    padding: 13px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(20,33,44,0.15);
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--navy-deep);
+    outline: none;
+    transition: border-color 0.25s ease;
+  }
+
+  .contact-input:focus{
+    border-color: var(--gold-soft);
+  }
+
+  .contact-submit{
+    background: var(--navy-deep);
+    color: var(--cream);
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 13px 24px;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: background 0.25s ease;
+  }
+
+  .contact-submit:hover{
+    background: var(--gold-soft);
+  }
+
+  .footer-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 40px;
+    border-top: 1px solid rgba(20,33,44,0.08);
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 13.5px;
+    color: rgba(20,33,44,0.55);
+  }
+
+  .footer-links{
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a:hover{
+    color: var(--navy-deep);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero-heading .row, .hero-media, .hero-sub-row, .section-reveal{
+      animation:none; opacity:1; transform:none; transition: none;
+    }
+  }
+
+  /* ---------------- RESPONSIVE ---------------- */
+
+  @media (max-width: 980px){
+    .about-narrative{ grid-template-columns: 1fr; gap: 36px; }
+    .provenance-grid{ grid-template-columns: 1fr; gap: 24px; }
+    .products-list{ grid-template-columns: 1fr; }
+    .contact-layout{ grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  @media (max-width: 860px){
+    .nav-links{ display:none; }
+    .nav-cta{ display:none; }
+    .nav-toggle{ display:flex; }
+    .hero-label.right{ display:none; }
+    .section{ padding: 90px 24px; }
+    .editorial-stage{ padding: 50px 24px 40px; }
+  }
+
+  @media (max-width: 640px){
+    .nav-wrap{ top: 14px; padding: 0 16px; }
+    .nav{ padding: 0 8px 0 10px; }
+    .brand-name{ font-size: 15px; }
+    .hero{ padding-top: calc(var(--nav-h) + 56px); }
+    .hero-label{ left: 20px; font-size: 11px; }
+    .hero-stage{ padding: 0 20px; }
+    .hero-media{ margin: -6vw auto 6vw; width: 88vw; aspect-ratio: 4/3; }
+    .hero-sub-row{ flex-direction: column; align-items: flex-start; margin-top: 8vw; }
+    .hero-sub{ max-width: none; }
+    .editorial-media{ margin: -5vw auto 4vw; width: 88vw; }
+    .contact-form{ flex-direction: column; }
+    .contact-submit{ width: 100%; text-align: center; }
+  }
+
+  @media (min-width: 1800px){
+    .hero-heading .row{ font-size: clamp(4.5rem, 6vw, 7.5rem); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="nav-wrap" id="navWrap">
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-mark">TO</div>
+        <span class="brand-name">The Original</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#products">Products</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="#products" class="nav-cta">Shop now</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#products">Products</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <span class="hero-label">An original harvest · est. Palasa</span>
+    <span class="hero-label right">Palasa, Andhra Pradesh<br>India's cashew capital</span>
+
+    <div class="hero-stage">
+      <h1 class="hero-heading">
+        <span class="row top">The Original</span>
+      </h1>
+
+      <div class="hero-media">
+        <div class="hero-fallback"></div>
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto">
+          <source src="assets/hero-cashew.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <h1 class="hero-heading">
+        <span class="row bottom gold">Grown right, in Palasa.</span>
+      </h1>
+
+      <div class="hero-sub-row">
+        <p class="hero-sub">
+          Hand-picked from the soil that gave the crop its name, roasted in
+          small batches, sealed the same day.
+        </p>
+        <div class="hero-actions">
+          <a href="#products" class="btn-primary">Shop the Original</a>
+          <a href="#about" class="btn-ghost">Our story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="section about" id="about">
+    <div class="section-inner section-reveal">
+      <span class="section-tag">The soil of Palasa</span>
+      <h2 class="section-title">An ancient coastal microclimate where India's cashew story began.</h2>
+
+      <div class="about-narrative">
+        <p class="about-lead">
+          In the northeastern pocket of Andhra Pradesh, where the Eastern Ghats roll into the Bay of Bengal, lies Palasa. Red laterite soil, tropical ocean humidity, and gentle sea breezes create an ecosystem unlike any other cashew growing region in the world.
+        </p>
+        <div class="about-body">
+          <p>
+            Most commercial cashews travel through multiple middlemen, warehouse floors, and high-heat ovens that sap the kernel of its delicate sweet oils. By the time they reach grocery shelves, they need added vegetable oils and artificial stabilizers to mimic freshness.
+          </p>
+          <p>
+            The Original was founded on a simple conviction: harvest strictly from family orchards in Palasa, roast with gentle indirect heat, and vacuum-seal directly in small batches at origin. The result is pure, buttery crunch as nature intended.
+          </p>
+        </div>
+      </div>
+
+      <!-- Reused Hero Layered Pattern for Product Showcase Moment -->
+      <div class="editorial-stage">
+        <div class="editorial-heading">
+          <span class="row">Hand-selected.</span>
+          <div class="editorial-media">
+            <img src="assets/pouch.jpeg" alt="The Original Premium Palasa Cashew 500g pouch" loading="lazy">
+          </div>
+          <span class="row gold">Never blended.</span>
+        </div>
+
+        <div class="provenance-grid">
+          <div class="provenance-item">
+            <span class="provenance-num">01 · Provenance</span>
+            <h3 class="provenance-title">Heirloom orchards</h3>
+            <p class="provenance-desc">Sourced exclusively from century-old heirloom trees rooted in Palasa's mineral-rich laterite soils.</p>
+          </div>
+          <div class="provenance-item">
+            <span class="provenance-num">02 · Caliber</span>
+            <h3 class="provenance-title">W-180 jumbo grade</h3>
+            <p class="provenance-desc">Strictly hand-graded to king size, guaranteeing unbroken whole kernels with rich natural sweetness.</p>
+          </div>
+          <div class="provenance-item">
+            <span class="provenance-num">03 · Integrity</span>
+            <h3 class="provenance-title">Sealed at origin</h3>
+            <p class="provenance-desc">Packed directly into resealable moisture-barrier zip pouches within hours of cracking.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
+  <section class="section products" id="products">
+    <div class="section-inner section-reveal">
+      <div class="products-header">
+        <div class="products-header-text">
+          <span class="section-tag">The harvest collection</span>
+          <h2 class="section-title">Three expressions of the Palasa harvest.</h2>
+          <p class="products-header-sub">Clean kernels with zero artificial additives. Harvested, hand-sorted, and sealed in Palasa.</p>
+        </div>
+      </div>
+
+      <div class="products-list">
+        <!-- Product 1 -->
+        <div class="product-entry">
+          <div>
+            <span class="product-tag">Grade W-180 Jumbo</span>
+            <h3 class="product-name">The Original Palasa Raw</h3>
+            <p class="product-desc">
+              Unroasted, creamy, and naturally sweet. The pure expression of Palasa laterite soil and gentle sea-breeze drying.
+            </p>
+            <div class="product-specs">500g zip pouch · Whole jumbo raw kernels</div>
+          </div>
+          <div class="product-bottom">
+            <span class="product-price">₹840</span>
+            <button class="product-cta">Reserve pouch</button>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-entry">
+          <div>
+            <span class="product-tag">Slow-Roasted Batch</span>
+            <h3 class="product-name">Coastal Sun-Dried Salt</h3>
+            <p class="product-desc">
+              Dry-roasted slowly in small pans until golden, dusted with mineral sea salt harvested from the Andhra coast.
+            </p>
+            <div class="product-specs">500g zip pouch · Small-batch dry roast</div>
+          </div>
+          <div class="product-bottom">
+            <span class="product-price">₹890</span>
+            <button class="product-cta">Reserve pouch</button>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-entry">
+          <div>
+            <span class="product-tag">Artisanal Roast</span>
+            <h3 class="product-name">Tellicherry Pepper & Ghee</h3>
+            <p class="product-desc">
+              Tossed in warm cultured A2 cow ghee and coarse-cracked black peppercorns. Savory, crisp, and deeply fragrant.
+            </p>
+            <div class="product-specs">500g zip pouch · Whole spice infusion</div>
+          </div>
+          <div class="product-bottom">
+            <span class="product-price">₹920</span>
+            <button class="product-cta">Reserve pouch</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT & ORIGIN SECTION -->
+  <section class="section contact" id="contact">
+    <div class="section-inner section-reveal">
+      <div class="contact-layout">
+        <div class="contact-info">
+          <div>
+            <span class="section-tag">Origin & inquiries</span>
+            <h2 class="section-title">Bring The Original to your table.</h2>
+          </div>
+          <p>
+            We process in small, seasonal quotas to preserve kernel sweetness. For private reserves, gifting boxes, or trade partnerships across India and abroad, reach our team directly.
+          </p>
+          <div class="contact-details">
+            <strong>The Original Cashew Co.</strong>
+            <span>Main Road, Palasa, Srikakulam District</span>
+            <span>Andhra Pradesh 532221, India</span>
+            <span>harvest@theoriginalpalasa.com</span>
+          </div>
+        </div>
+
+        <div class="contact-box">
+          <h3 class="contact-box-title">Harvest newsletter</h3>
+          <p class="contact-box-desc">
+            Receive notification when a new seasonal batch is cracked and packaged for dispatch.
+          </p>
+          <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you for your interest in The Original. We will notify you when the next harvest batch is ready.');">
+            <input type="email" class="contact-input" placeholder="Your email address" required>
+            <button type="submit" class="contact-submit">Stay informed</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© The Original Cashew Co. Palasa, Andhra Pradesh.</div>
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#products">Products</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const navWrap = document.getElementById('navWrap');
+    const onScroll = () => navWrap.classList.toggle('scrolled', window.scrollY > 30);
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    navToggle.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      navToggle.classList.toggle('open', isOpen);
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // Hero video fade-in with immediate readyState check and event listeners
+    const heroVideo = document.getElementById('heroVideo');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (heroVideo && !reduceMotion) {
+      const markReady = () => heroVideo.classList.add('is-ready');
+      if (heroVideo.readyState >= 3) {
+        markReady();
+      } else {
+        heroVideo.addEventListener('canplaythrough', markReady, { once: true });
+        heroVideo.addEventListener('playing', markReady, { once: true });
+        heroVideo.addEventListener('loadeddata', markReady, { once: true });
+      }
+      heroVideo.addEventListener('error', () => { heroVideo.style.display = 'none'; });
+      heroVideo.load();
+    } else if (heroVideo) {
+      heroVideo.style.display = 'none';
+    }
+
+    // Single section entrance sequence on first view (rise + fade)
+    const revealElements = document.querySelectorAll('.section-reveal');
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealElements.forEach(el => observer.observe(el));
+    } else {
+      revealElements.forEach(el => el.classList.add('is-revealed'));
+    }
+  </script>
+
+</body>
+</html>
