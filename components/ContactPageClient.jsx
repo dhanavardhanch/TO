@@ -27,7 +27,7 @@ export default function ContactPageClient() {
       general: 'General Inquiry / Feedback',
     };
 
-    let text = `*New Inquiry - The Original Cashews*\n\n`;
+    let text = `*New Inquiry | The Original Cashews*\n\n`;
     text += `*Name:* ${formData.name}\n`;
     text += `*Phone:* ${formData.phone}\n`;
     if (formData.email) text += `*Email:* ${formData.email}\n`;

@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Original — From the Cashew Capital, Palasa</title>
+<title>The Original | From the Cashew Capital, Palasa</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Stand-in for TT Firs Neue Var / Ageo (both are licensed/personal-use fonts).
      Swap the font-family below for your licensed font once you self-host it. -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -84,16 +84,36 @@
   .brand{ display:flex; align-items:center; gap: 10px; }
 
   .brand-mark{
-    width: 36px; height: 36px;
-    border: 1px solid var(--gold-soft);
-    border-radius: 10px;
-    display:flex; align-items:center; justify-content:center;
-    font-family: var(--display);
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: var(--gold-soft);
+    position: relative;
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(145deg, #374d63 0%, #223447 100%);
+    border: 1.5px solid #d4af37;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: #f3d687;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 3px 10px rgba(15, 25, 38, 0.28);
     flex-shrink: 0;
+  }
+
+  .brand-mark::before{
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    right: 2.5px;
+    bottom: 2.5px;
+    border: 1px solid rgba(212, 175, 55, 0.75);
+    border-radius: 2px;
+    pointer-events: none;
   }
 
   .brand-name{
@@ -798,12 +818,12 @@
       </div>
 
       <h1 class="hero-heading">
-        <span class="row bottom gold">Grown right, in Palasa.</span>
+        <span class="row bottom gold">Grown right in Palasa.</span>
       </h1>
 
       <div class="hero-sub-row">
         <p class="hero-sub">
-          Hand-picked from the soil that gave the crop its name, roasted in
+          Hand picked from the soil that gave the crop its name, roasted in
           small batches, sealed the same day.
         </p>
         <div class="hero-actions">

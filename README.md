@@ -1,4 +1,4 @@
-# THE ORIGINAL — From the Cashew Capital, Palasa
+# THE ORIGINAL | From the Cashew Capital, Palasa
 
 > **"Quality on our side, trust from yours."**
 

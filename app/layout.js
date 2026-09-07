@@ -1,9 +1,11 @@
 import './globals.css';
 
+import ScrollRevealProvider from '../components/ScrollRevealProvider';
+
 export const metadata = {
-  title: 'The Original — From the Cashew Capital, Palasa',
+  title: 'The Original | From the Cashew Capital, Palasa',
   description:
-    'Premium cashews hand-picked from Palasa, India — the cashew capital.',
+    'Premium cashews hand picked from Palasa, India, the cashew capital.',
 };
 
 export default function RootLayout({ children }) {
@@ -17,11 +19,13 @@ export default function RootLayout({ children }) {
           crossOrigin="true"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ScrollRevealProvider>{children}</ScrollRevealProvider>
+      </body>
     </html>
   );
 }

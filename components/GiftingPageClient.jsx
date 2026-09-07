@@ -22,7 +22,7 @@ export default function GiftingPageClient() {
       id: 'royal-sovereign',
       name: 'The Royal Sovereign Box',
       tag: 'Grand CXO & VIP Dignitary Gifting',
-      desc: 'Our rarest Jumbo King W180 paired alongside rustic Palasa Raw Skin Cashews. Presented in a rigid magnetic-closure navy box with embossed gold foil lettering.',
+      desc: 'Our rarest Jumbo King W180 paired alongside rustic Palasa Raw Skin Cashews. Presented in a rigid magnetic closure navy box with embossed gold foil lettering.',
       contents: ['The Original W180 Jumbo King (250g)', 'Palasa Raw Skin Cashews (250g)', 'Custom Greeting Stationery Card'],
       badge: 'Flagship Edition',
     },
@@ -38,7 +38,7 @@ export default function GiftingPageClient() {
       id: 'shubh-vivaha',
       name: 'The Shubh Vivaha Wedding Suite',
       tag: 'Wedding Trousseau & Return Favors',
-      desc: 'Crafted for auspicious beginnings. Benchmark W320 whole cashews paired with velvety dark chocolate-coated nuts and sweet-making split kernels in an elegant keepsake box.',
+      desc: 'Crafted for auspicious beginnings. Benchmark W320 whole cashews paired with velvety dark chocolate coated nuts and sweet-making split kernels in an elegant keepsake box.',
       contents: ['The Original W320 Classic Benchmark (250g)', 'Chocolate Cashew & Badam (200g)', 'JH Clean Split Halves (250g)'],
       badge: 'Wedding Signature',
     },
@@ -46,7 +46,7 @@ export default function GiftingPageClient() {
       id: 'festive-celebrations',
       name: 'The Festive Celebrations Trunk',
       tag: 'Diwali, Sankranti & New Year',
-      desc: 'An opulent multi-tier treasure containing four signature calibers and confectionery varieties. Designed to create a showstopping centerpiece in any family celebration.',
+      desc: 'An opulent multi tier treasure containing four signature calibers and confectionery varieties. Designed to create a showstopping centerpiece in any family celebration.',
       contents: ['Grade W180 King (250g)', 'Skin Cashews (250g)', 'Artisanal Chocolates (200g)', 'Royal Mix Dry Fruit (250g)'],
       badge: 'Grand Feast Trunk',
     },
@@ -66,12 +66,12 @@ export default function GiftingPageClient() {
     {
       num: '03',
       title: 'Bespoke Sleeves & Cards',
-      desc: 'Incorporate your corporate identity, wedding crest, or family monogram with gold hot-foil stamping and personalized notes.',
+      desc: 'Incorporate your corporate identity, wedding crest, or family monogram with gold hot foil stamping and personalized notes.',
     },
     {
       num: '04',
-      title: 'Pan-India Delivery',
-      desc: 'We handle temperature-controlled multi-address dispatch across India, ensuring each hamper arrives fresh and intact.',
+      title: 'Pan India Delivery',
+      desc: 'We handle temperature controlled multi address dispatch across India, ensuring each hamper arrives fresh and intact.',
     },
   ];
 
@@ -86,7 +86,7 @@ export default function GiftingPageClient() {
       personal: 'Personal Celebrations / Anniversary',
     };
 
-    let text = `*New Gifting Inquiry - The Original Cashews*\n\n`;
+    let text = `*New Gifting Inquiry | The Original Cashews*\n\n`;
     text += `*Contact Person:* ${form.name}\n`;
     if (form.company) text += `*Company / Event:* ${form.company}\n`;
     text += `*Phone / WhatsApp:* ${form.phone}\n`;
@@ -135,7 +135,7 @@ export default function GiftingPageClient() {
           <div className="gifting-showcase-grid">
             <div className="gifting-video-wrapper">
               <video
-                src="/assets/gifting.mp4"
+                src="/assets/gifting.mp4?v=2"
                 autoPlay
                 loop
                 muted
@@ -160,9 +160,9 @@ export default function GiftingPageClient() {
                 <div className="showcase-pillar-item">
                   <div className="pillar-bullet"></div>
                   <div>
-                    <h4 className="pillar-title">Factory-Fresh Sourcing</h4>
+                    <h4 className="pillar-title">Factory Fresh Sourcing</h4>
                     <p className="pillar-desc">
-                      Every hamper is filled with stock roasted just days before dispatch — never aged warehouse inventory.
+                      Every hamper is filled with stock roasted just days before dispatch, never aged warehouse inventory.
                     </p>
                   </div>
                 </div>
@@ -180,7 +180,7 @@ export default function GiftingPageClient() {
                 <div className="showcase-pillar-item">
                   <div className="pillar-bullet"></div>
                   <div>
-                    <h4 className="pillar-title">Pan-India Doorstep Dispatch</h4>
+                    <h4 className="pillar-title">Pan India Doorstep Dispatch</h4>
                     <p className="pillar-desc">
                       Provide an Excel sheet of addresses, and we will safely ship individual gift boxes directly to clients and guests nationwide.
                     </p>
@@ -366,10 +366,10 @@ export default function GiftingPageClient() {
                       value={form.quantity}
                       onChange={(e) => setForm({ ...form, quantity: e.target.value })}
                     >
-                      <option value="10-25">10 – 25 boxes</option>
-                      <option value="25-50">25 – 50 boxes</option>
-                      <option value="50-100">50 – 100 boxes</option>
-                      <option value="100-250">100 – 250 boxes</option>
+                      <option value="10-25">10 to 25 boxes</option>
+                      <option value="25-50">25 to 50 boxes</option>
+                      <option value="50-100">50 to 100 boxes</option>
+                      <option value="100-250">100 to 250 boxes</option>
                       <option value="250+">250+ boxes</option>
                     </select>
                   </div>

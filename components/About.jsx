@@ -1,7 +1,7 @@
 export default function About() {
   return (
     <section className="section about" id="about">
-      <div className="section-inner section-reveal is-revealed">
+      <div className="section-inner section-reveal">
         <span className="section-tag">The soil of Palasa</span>
         <h2 className="section-title">
           An ancient coastal microclimate where India&apos;s cashew story began.

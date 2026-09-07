@@ -70,16 +70,48 @@ a:focus-visible, button:focus-visible{
 .brand{ display:flex; align-items:center; gap: 10px; }
 
 .brand-mark{
-  width: 36px; height: 36px;
-  border: 1px solid var(--gold-soft);
-  border-radius: 10px;
-  display:flex; align-items:center; justify-content:center;
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  color: var(--gold-soft);
+  position: relative;
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(145deg, #374d63 0%, #223447 100%);
+  border: 1.5px solid #d4af37;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: #f3d687;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 10px rgba(15, 25, 38, 0.28);
   flex-shrink: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.brand-mark::before{
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  right: 2.5px;
+  bottom: 2.5px;
+  border: 1px solid rgba(212, 175, 55, 0.75);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: border-color 0.25s ease;
+}
+
+.brand:hover .brand-mark{
+  transform: translateY(-1px);
+  border-color: #f5dc93;
+  box-shadow: 0 5px 14px rgba(15, 25, 38, 0.35);
+}
+
+.brand:hover .brand-mark::before{
+  border-color: rgba(245, 220, 147, 0.9);
 }
 
 .brand-name{
@@ -274,26 +306,31 @@ a:focus-visible, button:focus-visible{
   font-family: var(--display);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  line-height: 1.02;
-  margin: 4px 0 6px;
+  gap: 2px;
+  line-height: 1;
+  margin: 2px 0 6px;
 }
 
 .title-row{
   display: block;
-  font-size: clamp(2.8rem, 7.5vw, 6.2rem);
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 
 .title-row.cream{
+  font-size: clamp(2.4rem, 5.8vw, 4.8rem);
+  font-weight: 700;
+  line-height: 1.05;
   color: #FAF7F1;
   text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
 }
 
 .title-row.gold{
+  font-size: clamp(1.3rem, 3.8vw, 3.15rem);
+  font-weight: 600;
+  line-height: 1.1;
   color: var(--gold);
   text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
 }
 
 .hero-lead-text{
@@ -348,6 +385,34 @@ a:focus-visible, button:focus-visible{
   background: rgba(255, 255, 255, 0.2);
   border-color: #FAF7F1;
   transform: translateY(-2px);
+}
+
+/* Hero Entrance Animations */
+@keyframes heroTextGlide {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-tag-pill{
+  animation: heroTextGlide 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.08s backwards;
+}
+
+.hero-main-title{
+  animation: heroTextGlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.20s backwards;
+}
+
+.hero-lead-text{
+  animation: heroTextGlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s backwards;
+}
+
+.hero-actions-row{
+  animation: heroTextGlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.44s backwards;
 }
 
 .btn-primary{
@@ -436,14 +501,242 @@ a:focus-visible, button:focus-visible{
   margin-bottom: 36px;
 }
 
-.section-reveal{
+/* ---------------- MULTI-STAGE SCROLL ANIMATIONS ---------------- */
+
+/* STAGE 1: Alternating Section Entrances (Slide Left vs Slide Right with Focus Lift) */
+.section-reveal,
+.scroll-reveal,
+.about-drone-inner,
+.about-founder-inner,
+.about-philosophy-inner,
+.gifting-showcase-inner,
+.gifting-editions-inner,
+.gifting-process-inner,
+.gifting-form-inner,
+.contact-quick-inner,
+.contact-grid-section,
+.footer-inner{
   opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.85s cubic-bezier(0.19, 1, 0.22, 1), transform 0.85s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
-.section-reveal.is-revealed{
+
+/* Even Sections: Slide from Left with Focus Lift */
+.anim-slide-left{
+  transform: translateX(-36px) scale(0.975);
+  filter: blur(3px);
+}
+
+.anim-slide-left.is-revealed{
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  filter: blur(0);
+}
+
+/* Odd Sections: Slide from Right with Focus Lift */
+.anim-slide-right{
+  transform: translateX(36px) scale(0.975);
+  filter: blur(3px);
+}
+
+.anim-slide-right.is-revealed{
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  filter: blur(0);
+}
+
+/* Default reveal fallback */
+.section-reveal.is-revealed,
+.scroll-reveal.is-revealed,
+.about-drone-inner.is-revealed,
+.about-founder-inner.is-revealed,
+.about-philosophy-inner.is-revealed,
+.gifting-showcase-inner.is-revealed,
+.gifting-editions-inner.is-revealed,
+.gifting-process-inner.is-revealed,
+.gifting-form-inner.is-revealed,
+.contact-quick-inner.is-revealed,
+.contact-grid-section.is-revealed,
+.footer-inner.is-revealed{
+  opacity: 1;
+}
+
+/* Staggered Child Micro-Reveals */
+.section-reveal .section-tag,
+.section-reveal .section-title,
+.section-reveal .section-lead,
+.section-reveal .about-lead,
+.section-reveal .about-body p,
+.section-reveal .grades-header-sub,
+.section-reveal .products-header-sub,
+.section-reveal .gifting-lead{
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.section-reveal.is-revealed .section-tag{
   opacity: 1;
   transform: translateY(0);
+  transition-delay: 0.05s;
+}
+
+.section-reveal.is-revealed .section-title{
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.14s;
+}
+
+.section-reveal.is-revealed .section-lead,
+.section-reveal.is-revealed .about-lead,
+.section-reveal.is-revealed .grades-header-sub,
+.section-reveal.is-revealed .products-header-sub,
+.section-reveal.is-revealed .gifting-lead{
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.24s;
+}
+
+.section-reveal.is-revealed .about-body p:nth-child(1){
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.30s;
+}
+
+.section-reveal.is-revealed .about-body p:nth-child(2){
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.38s;
+}
+
+/* STAGE 2: SECOND ANIMATION (Runs right after entrance settles) */
+
+/* 2A: Golden Shimmer Sweep across Section Tags */
+@keyframes goldGleamSweep {
+  0% {
+    background-position: -200% 0;
+    box-shadow: 0 0 0 rgba(201, 164, 85, 0);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(201, 164, 85, 0.35);
+  }
+  100% {
+    background-position: 200% 0;
+    box-shadow: 0 0 0 rgba(201, 164, 85, 0);
+  }
+}
+
+.is-revealed .section-tag{
+  background-image: linear-gradient(
+    105deg,
+    rgba(201, 164, 85, 0.12) 0%,
+    rgba(201, 164, 85, 0.18) 35%,
+    rgba(245, 220, 147, 0.6) 50%,
+    rgba(201, 164, 85, 0.18) 65%,
+    rgba(201, 164, 85, 0.12) 100%
+  );
+  background-size: 250% 100%;
+  animation: goldGleamSweep 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.8s 1 normal forwards;
+}
+
+/* 2B: Golden Accent Underline Draw under Section Titles */
+.section-title{
+  position: relative;
+}
+
+.section-title::after{
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2.5px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(201, 164, 85, 0.2) 100%);
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.85s; /* Triggers right after heading settles! */
+}
+
+.is-revealed .section-title::after{
+  transform: scaleX(1);
+}
+
+/* 2C: Tactile Rotation Settle on Grade Caliber Discs */
+.section-reveal .grade-disc{
+  transform: scale(0.92) rotate(-8deg);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section-reveal.is-revealed .grade-disc{
+  transform: scale(1) rotate(0deg);
+  transition-delay: 0.3s;
+}
+
+/* Staggered Card Entrances in Grids */
+.section-reveal .product-card,
+.section-reveal .grade-item{
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.section-reveal.is-revealed .product-card:nth-child(1),
+.section-reveal.is-revealed .grade-item:nth-child(1){
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.16s;
+}
+
+.section-reveal.is-revealed .product-card:nth-child(2),
+.section-reveal.is-revealed .grade-item:nth-child(2){
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.24s;
+}
+
+.section-reveal.is-revealed .product-card:nth-child(3),
+.section-reveal.is-revealed .grade-item:nth-child(3){
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.32s;
+}
+
+.section-reveal.is-revealed .product-card:nth-child(4),
+.section-reveal.is-revealed .grade-item:nth-child(4){
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.40s;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .section-reveal,
+  .scroll-reveal,
+  .hero-tag-pill,
+  .hero-main-title,
+  .hero-lead-text,
+  .hero-actions-row,
+  .section-reveal .section-tag,
+  .section-reveal .section-title,
+  .section-reveal .section-lead,
+  .section-reveal .about-lead,
+  .section-reveal .about-body p,
+  .section-reveal .grades-header-sub,
+  .section-reveal .products-header-sub,
+  .section-reveal .gifting-lead,
+  .section-reveal .product-card,
+  .section-reveal .grade-item,
+  .section-reveal .grade-disc,
+  .section-title::after{
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .about{
@@ -1061,8 +1354,7 @@ a:focus-visible, button:focus-visible{
 }
 
 .footer-brand .brand-mark{
-  border-color: var(--gold);
-  color: var(--gold);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
 .footer-tagline{
@@ -1172,21 +1464,25 @@ a:focus-visible, button:focus-visible{
 .footer-watermark-wrap{
   width: 100%;
   text-align: center;
-  margin: 30px 0 20px;
+  margin: 20px 0 16px;
   user-select: none;
   pointer-events: none;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-watermark{
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(3.8rem, 12.5vw, 12rem);
-  line-height: 0.88;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.4rem, 8.6vw, 7.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
   color: rgba(250, 247, 241, 0.05);
-  display: block;
+  display: inline-block;
   white-space: nowrap;
+  max-width: 100%;
 }
 
 .footer-bottom{
@@ -1219,6 +1515,7 @@ a:focus-visible, button:focus-visible{
 @media (max-width: 640px){
   .footer-grid{ grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom{ flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-watermark{ font-size: clamp(1.8rem, 8.8vw, 3.6rem); letter-spacing: -0.01em; }
 }
 
 /* ---------------- ABOUT US CTA ON HOME PAGE ---------------- */

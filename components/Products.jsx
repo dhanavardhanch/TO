@@ -61,14 +61,14 @@ export default function Products() {
   const handleBuyNow = (product, cardIdx) => {
     const optIdx = selectedSizes[cardIdx] ?? 0;
     const opt = product.options[optIdx];
-    const text = `Hi The Original, I would like to order:\n*${product.name}* (${opt.size}) - ₹${opt.price}\nPlease confirm dispatch details.`;
+    const text = `Hi The Original, I would like to order:\n*${product.name}* (${opt.size}) | ₹${opt.price}\nPlease confirm dispatch details.`;
     const url = `https://wa.me/919100267404?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
 
   return (
     <section className="section products" id="products">
-      <div className="section-inner section-reveal is-revealed">
+      <div className="section-inner section-reveal">
         <div className="products-header">
           <div className="products-header-content">
             <span className="section-tag">Harvest grades · Palasa origin</span>

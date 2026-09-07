@@ -2,21 +2,21 @@ import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 
 export const metadata = {
-  title: 'About Us — The Original | Founder CH Dhana Vardhan & Palasa Roots',
+  title: 'About Us | The Original | Founder CH Dhana Vardhan & Palasa Roots',
   description:
-    'Learn about The Original, founded by CH Dhana Vardhan in Palasa. Selective multi-factory curation, strictly factory-fresh stock, and premium packaging carrying Palasa cashews with pride across India.',
+    'Learn about The Original, founded by CH Dhana Vardhan in Palasa. Selective multi factory curation, strictly factory fresh stock, and premium packaging carrying Palasa cashews with pride across India.',
 };
 
 export default function AboutPage() {
   const pillars = [
     {
       num: '01',
-      title: 'Multi-factory curation',
-      desc: 'We are selective relabellers and repackers. Instead of being locked into a single factory’s daily output, we inspect multiple processing units in Palasa and hand-pick only the finest batches with superior grade, sweetness, and crispness.',
+      title: 'Multi factory curation',
+      desc: 'We are selective relabellers and repackers. Instead of being locked into a single factory’s daily output, we inspect multiple processing units in Palasa and hand pick only the finest batches with superior grade, sweetness, and crispness.',
     },
     {
       num: '02',
-      title: 'Strictly factory-fresh',
+      title: 'Strictly factory fresh',
       desc: 'Commercial brands let stock sit in warehouse cold storage for 6 to 12 months. We reject stored stock entirely. Our cashews move fresh from the roasting drum into airtight seals so you experience genuine origin crunch.',
     },
     {
@@ -27,7 +27,7 @@ export default function AboutPage() {
     {
       num: '04',
       title: 'Packaging that brings pride',
-      desc: 'Palasa cashews deserve more than cheap, transparent plastic bags. We encase our harvest in luxury, multi-layer aroma-barrier packaging that protects quality and makes every box a gift of honor.',
+      desc: 'Palasa cashews deserve more than cheap, transparent plastic bags. We encase our harvest in luxury, multi layer aroma barrier packaging that protects quality and makes every box a gift of honor.',
     },
   ];
 
@@ -44,7 +44,7 @@ export default function AboutPage() {
           </h1>
           <p className="about-hero-lead">
             The Original was created by <strong>CH Dhana Vardhan</strong> with a single, heartfelt ambition:
-            to take home-grown Palasa-origin cashews and deliver them nationwide in premium packaging that honors the land, the farmers, and the authentic taste of Andhra Pradesh.
+            to take home grown Palasa origin cashews and deliver them nationwide in premium packaging that honors the land, the farmers, and the authentic taste of Andhra Pradesh.
           </p>
         </div>
       </section>
@@ -54,7 +54,7 @@ export default function AboutPage() {
         <div className="about-drone-inner">
           <div className="about-drone-card">
             <video
-              src="/assets/about_drone.mp4"
+              src="/assets/about_drone.mp4?v=2"
               autoPlay
               loop
               muted
@@ -84,7 +84,7 @@ export default function AboutPage() {
               <div className="about-founder-card">
                 <img
                   src="/assets/founder.jpg"
-                  alt="CH Dhana Vardhan — Founder of The Original"
+                  alt="CH Dhana Vardhan, Founder of The Original"
                   className="about-founder-img"
                 />
                 <div className="about-founder-label">
@@ -111,7 +111,7 @@ export default function AboutPage() {
                   As a working professional traveling across cities, whenever I bought cashews from supermarkets or renowned brands, the difference was stark: they were often aged warehouse stock, dry, brittle, and stripped of the natural sweet oils that define real Palasa nuts. Furthermore, local Palasa cashews were often sold in flimsy, generic plastic covers without identity.
                 </p>
                 <p>
-                  I decided to build <strong>The Original</strong> to change that. I wanted to take the authentic cashews grown right here from our Palasa roots and send them to every household, corporate desk, and festive table across India — packaged in a sleek, premium, modern design so that our town&apos;s heritage is recognized with genuine pride.
+                  I decided to build <strong>The Original</strong> to change that. I wanted to take the authentic cashews grown right here from our Palasa roots and send them to every household, corporate desk, and festive table across India, packaged in a sleek, premium, modern design so that our town&apos;s heritage is recognized with genuine pride.
                 </p>
                 <div className="about-founder-signature">
                   <div className="signature-name">CH Dhana Vardhan</div>
@@ -129,17 +129,17 @@ export default function AboutPage() {
           <div className="about-philosophy-header">
             <span className="section-tag">Complete transparency</span>
             <h2 className="section-title">
-              We are selective repackers and curators — and that is our greatest strength.
+              We are selective repackers and curators, and that is our greatest strength.
             </h2>
             <p className="about-philosophy-lead">
-              Unlike traditional single-factory owners who are forced to sell whatever comes off their machines on a given day, we are independent curators.
+              Unlike traditional single factory owners who are forced to sell whatever comes off their machines on a given day, we are independent curators.
             </p>
           </div>
 
           <div className="about-curator-explanation">
             <div className="curator-card">
               <div className="curator-card-icon">01</div>
-              <h3 className="curator-card-title">Multi-factory inspection</h3>
+              <h3 className="curator-card-title">Multi factory inspection</h3>
               <p className="curator-card-text">
                 Palasa houses dozens of processing units. Rather than relying on a single plant, we inspect and test batches across multiple trusted factories in the belt. We evaluate moisture levels, kernel consistency, and roast perfection before procuring a single kilogram.
               </p>
@@ -149,7 +149,7 @@ export default function AboutPage() {
               <div className="curator-card-icon">02</div>
               <h3 className="curator-card-title">Only the best quality</h3>
               <p className="curator-card-text">
-                We take only the stock that has the finest quality, rejecting off-spec, broken, or sub-par lots. Because we are relabellers, our allegiance is not to machinery or production quotas — our allegiance is entirely to <strong>your taste experience</strong>.
+                We take only the stock that has the finest quality, rejecting off-spec, broken, or sub par lots. Because we are relabellers, our allegiance is not to machinery or production quotas, our allegiance is entirely to <strong>your taste experience</strong>.
               </p>
             </div>
 

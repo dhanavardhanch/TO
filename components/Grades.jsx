@@ -17,14 +17,14 @@ export default function Grades() {
       id: 'W240',
       label: 'W240',
       sub: 'The standard',
-      detail: '220–240 count · Signature balance',
+      detail: '220 to 240 count · Signature balance',
       image: '/assets/grade-w240.jpg',
     },
     {
       id: 'W320',
       label: 'W320',
       sub: 'Regular benchmark',
-      detail: '300–320 count · Everyday classic',
+      detail: '300 to 320 count · Everyday classic',
       image: '/assets/grade-w320.jpg',
     },
     {
@@ -38,7 +38,7 @@ export default function Grades() {
 
   return (
     <section className="section grades" id="grades">
-      <div className="section-inner section-reveal is-revealed">
+      <div className="section-inner section-reveal">
         <div className="grades-header">
           <span className="section-tag">Kernel calibers · Palasa standards</span>
           <h2 className="section-title">The cashew has ranks.</h2>
@@ -61,7 +61,7 @@ export default function Grades() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') setActiveGrade(g.id);
                 }}
-                aria-label={`Inspect ${g.label} grade - ${g.sub}`}
+                aria-label={`Inspect ${g.label} grade: ${g.sub}`}
               >
                 <div className="grade-disc">
                   <div className="grade-text-view">
@@ -94,11 +94,11 @@ export default function Grades() {
               We also source micro-lots including <strong>W210</strong> and{' '}
               <strong>W400</strong>. While not kept in immediate daily stock,
               these grades are available for private allocations upon seasonal
-              pre-order.
+              pre order.
             </p>
           </div>
           <a href="#contact" className="btn-primary grades-preorder-cta">
-            Pre-order reserve grades
+            Pre order reserve grades
           </a>
         </div>
       </div>

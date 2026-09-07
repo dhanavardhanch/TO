@@ -16,13 +16,13 @@ export default function Gifting() {
 
   return (
     <section className="section gifting" id="gifting">
-      <div className="section-inner section-reveal is-revealed">
+      <div className="section-inner section-reveal">
         <div className="gifting-grid">
           {/* Left Column: Gifting Video */}
           <div className="gifting-media-wrap">
             <div className="gifting-video-card">
               <video
-                src="/assets/gifting.mp4"
+                src="/assets/gifting.mp4?v=2"
                 autoPlay
                 muted
                 loop

@@ -86,7 +86,7 @@ export const PRODUCTS_DATA = [
     grade: 'SJH · Small Split Kernels',
     category: 'splits',
     categoryLabel: 'Split Cashews',
-    desc: 'Finely sorted small split cashews, hand-selected for uniform texture, kheer, halwa, pulav, and festive baking.',
+    desc: 'Finely sorted small split cashews, hand selected for uniform texture, kheer, halwa, pulav, and festive baking.',
     image: '/assets/grade-jh.jpg',
     badge: 'Kitchen Essential',
     options: [
@@ -130,7 +130,7 @@ export const PRODUCTS_DATA = [
     grade: 'Gourmet Roasted Infusions',
     category: 'dryfruits',
     categoryLabel: 'Chocolates & Dry Fruits',
-    desc: 'Palasa whole cashews roasted in small batches with Peri Peri, Himalayan Pink Salt & Cracked Black Pepper. Pre-order open now.',
+    desc: 'Palasa whole cashews roasted in small batches with Peri Peri, Himalayan Pink Salt & Cracked Black Pepper. Pre order open now.',
     image: '/assets/pouch.jpeg',
     badge: 'Coming Soon',
     isComingSoon: true,
@@ -245,7 +245,7 @@ export const PRODUCTS_DATA = [
     grade: 'Selected Jumbo + Culinary Split',
     category: 'combos',
     categoryLabel: 'Curated Combos',
-    desc: 'Selected Jumbo kernels for evening tea-time snacking paired with pristine split halves for rich gravies and festive sweets.',
+    desc: 'Selected Jumbo kernels for evening tea time snacking paired with pristine split halves for rich gravies and festive sweets.',
     image: '/assets/grade-jh.jpg',
     badge: 'Kitchen & Table',
     options: [
@@ -452,7 +452,7 @@ export default function ProductsPageClient() {
 
   const sendWhatsAppDirectOrder = () => {
     if (!directOrderItem) return;
-    let text = `*Direct Buy Order - The Original Palasa Cashews*\n\n`;
+    let text = `*Direct Buy Order | The Original Palasa Cashews*\n\n`;
     text += `*Product:* ${directOrderItem.name}\n`;
     text += `*Size:* ${directOrderItem.chosenSize}\n`;
     text += `*Price:* ₹${directOrderItem.chosenPrice}\n`;
@@ -475,12 +475,12 @@ export default function ProductsPageClient() {
       {/* Hero Header */}
       <section className="shop-hero">
         <div className="shop-hero-inner">
-          <span className="section-tag">Palasa harvest catalog · Factory-fresh stock</span>
+          <span className="section-tag">Palasa harvest catalog · Factory fresh stock</span>
           <h1 className="shop-hero-title">
             Pure Palasa Cashews, Crafted Combos &amp; Heritage Harvests.
           </h1>
           <p className="shop-hero-lead">
-            Every pouch is sealed immediately after slow-roasting in Palasa. Free of warehouse staleness,
+            Every pouch is sealed immediately after slow roasting in Palasa. Free of warehouse staleness,
             curated across top processing units, and delivered directly to your doorstep.
           </p>
         </div>

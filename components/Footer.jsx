@@ -36,8 +36,8 @@ export default function Footer() {
               <span className="brand-name">The Original</span>
             </div>
             <p className="footer-tagline">
-              Hand-picked from heirloom orchards in Palasa, Andhra Pradesh.
-              Clean whole kernels roasted in small batches and vacuum-sealed at origin.
+              Hand picked from heirloom orchards in Palasa, Andhra Pradesh.
+              Clean whole kernels roasted in small batches and vacuum sealed at origin.
             </p>
             <div className="footer-origin-stamp">
               13/1/76, THE ORIGINAL · Little Angels School Straight, Tilak Nagar, Kasibugga, Palasa 532222

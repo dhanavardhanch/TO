@@ -41,7 +41,7 @@ export default function Hero() {
           playsInline
           preload="auto"
         >
-          <source src="/assets/hero-cashew.mp4?v=3" type="video/mp4" />
+          <source src="/assets/hero-cashew.mp4?v=4" type="video/mp4" />
         </video>
         <div className="hero-video-overlay" />
       </div>
@@ -62,11 +62,11 @@ export default function Hero() {
 
         <h1 className="hero-main-title">
           <span className="title-row cream">The Original</span>
-          <span className="title-row gold">Grown right, in Palasa.</span>
+          <span className="title-row gold">Grown right in Palasa.</span>
         </h1>
 
         <p className="hero-lead-text">
-          Hand-picked from the soil that gave the crop its name, roasted in
+          Hand picked from the soil that gave the crop its name, roasted in
           small batches, sealed the same day.
         </p>
 
