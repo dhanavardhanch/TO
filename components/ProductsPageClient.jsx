@@ -4,14 +4,16 @@ import { useState, useMemo } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
 
+// Catalog Data (No prefilled combos; strict Flavours & Mixes)
 export const PRODUCTS_DATA = [
-  // --- Whole Cashews ---
+  // --- Whole & Specialty Cashews (250g & 500g only) ---
   {
     id: 'w180',
     name: 'The Original W180',
     grade: 'Grade W180 · Jumbo King',
+    gradeKey: 'w180',
     category: 'cashews',
-    categoryLabel: 'Whole Cashews',
+    categoryLabel: 'Cashews',
     desc: 'The rarest and largest king cashew of Palasa. Renowned for its rich ivory density, creamy mouthfeel, and naturally sweet finish.',
     image: '/assets/pouch.jpeg',
     badge: 'Jumbo King',
@@ -21,12 +23,13 @@ export const PRODUCTS_DATA = [
     ],
   },
   {
-    id: 'w220',
-    name: 'The Original W220',
-    grade: 'Grade W220 · Selected Jumbo',
+    id: 'w240',
+    name: 'The Original W240',
+    grade: 'Grade W240 · Standard Jumbo',
+    gradeKey: 'w240',
     category: 'cashews',
-    categoryLabel: 'Whole Cashews',
-    desc: 'Generously sized whole cashews offering the quintessential crisp snap and delicate buttery character of coastal laterite soil.',
+    categoryLabel: 'Cashews',
+    desc: 'Generously calibrated whole cashews offering crisp snap and delicate buttery character of coastal laterite soil.',
     image: '/assets/pouch.jpeg',
     badge: 'Popular',
     options: [
@@ -38,8 +41,9 @@ export const PRODUCTS_DATA = [
     id: 'w320',
     name: 'The Original W320',
     grade: 'Grade W320 · Classic Benchmark',
+    gradeKey: 'w320',
     category: 'cashews',
-    categoryLabel: 'Whole Cashews',
+    categoryLabel: 'Cashews',
     desc: 'The traditional standard of Palasa harvests. Pristine whole kernels, perfectly balanced for everyday nourishment and gifting.',
     image: '/assets/pouch.jpeg',
     badge: 'Benchmark',
@@ -48,15 +52,14 @@ export const PRODUCTS_DATA = [
       { size: '500g', price: 620, mrp: 720 },
     ],
   },
-
-  // --- Skin Cashews (Pottu Pappu) ---
   {
     id: 'pottu-pappu',
-    name: 'Palasa Raw Cashew Nuts / Skin Cashews',
+    name: 'Palasa Raw Cashew / Skin Cashews',
     grade: 'Heritage Roasted · Skin-On (Pottu Pappu)',
-    category: 'skin',
-    categoryLabel: 'Skin Cashews',
-    desc: 'Traditional unpeeled Palasa cashews roasted slow with protective natural skin intact. Extra crunch, nutty roasted depth, and high natural fiber.',
+    gradeKey: 'skin',
+    category: 'cashews',
+    categoryLabel: 'Cashews',
+    desc: 'Traditional unpeeled Palasa cashews roasted slow with protective natural skin intact. Extra crunch and deep roasted nutty flavor.',
     image: '/assets/skin-cashew.png',
     badge: 'Heritage Roasted',
     options: [
@@ -64,29 +67,14 @@ export const PRODUCTS_DATA = [
       { size: '500g', price: 560, mrp: 660 },
     ],
   },
-
-  // --- Split Cashews ---
   {
-    id: 'jh',
-    name: 'The Original JH',
-    grade: 'JH · Clean Split Halves',
-    category: 'splits',
-    categoryLabel: 'Split Cashews',
-    desc: 'Clean natural split cashews. Perfect for traditional Andhra sweets, rich curries, gravies, and everyday culinary excellence.',
-    image: '/assets/grade-jh.jpg',
-    badge: 'Culinary Choice',
-    options: [
-      { size: '250g', price: 260, mrp: 310 },
-      { size: '500g', price: 499, mrp: 590 },
-    ],
-  },
-  {
-    id: 'sjh',
-    name: 'The Original SJH',
-    grade: 'SJH · Small Split Kernels',
-    category: 'splits',
-    categoryLabel: 'Split Cashews',
-    desc: 'Finely sorted small split cashews, hand selected for uniform texture, kheer, halwa, pulav, and festive baking.',
+    id: 'splits',
+    name: 'The Original Splits',
+    grade: 'Clean Split Cashews · Halves & Kernels',
+    gradeKey: 'splits',
+    category: 'cashews',
+    categoryLabel: 'Cashews',
+    desc: 'Clean, hand-selected split cashew kernels. Perfect for everyday cooking, traditional Andhra sweets, rich curries, and festive home baking.',
     image: '/assets/grade-jh.jpg',
     badge: 'Kitchen Essential',
     options: [
@@ -95,219 +83,216 @@ export const PRODUCTS_DATA = [
     ],
   },
 
-  // --- Chocolates & Dry Fruits ---
+  // --- Strict Flavours & Mixes ---
   {
-    id: 'choco-cashew-badam',
-    name: 'Chocolate Cashew & Badam',
+    id: 'choco-cashew',
+    name: 'Chocolate Cashew',
+    grade: 'Artisanal Confectionery · Grade Customizable',
+    category: 'flavours-mixes',
+    categoryLabel: 'Flavours & Mixes',
+    desc: 'Slow roasted Palasa whole cashews coated in rich Belgian-style dark chocolate. Choose your preferred kernel caliber (W180 / W210 / W320).',
+    image: '/assets/pouch.jpeg',
+    badge: 'Artisanal',
+    hasGradeCustomization: true,
+    customGrades: ['W320', 'W210', 'W180'],
+    gradeOptions: {
+      W320: [
+        { size: '100g', price: 210, mrp: 250 },
+        { size: '200g', price: 399, mrp: 460 },
+      ],
+      W210: [
+        { size: '100g', price: 230, mrp: 270 },
+        { size: '200g', price: 440, mrp: 520 },
+      ],
+      W180: [
+        { size: '100g', price: 260, mrp: 310 },
+        { size: '200g', price: 490, mrp: 580 },
+      ],
+    },
+    options: [
+      { size: '100g', price: 210, mrp: 250 },
+      { size: '200g', price: 399, mrp: 460 },
+    ],
+  },
+  {
+    id: 'choco-badam',
+    name: 'Chocolate Badam',
     grade: 'Artisanal Confectionery · Handcrafted',
-    category: 'dryfruits',
-    categoryLabel: 'Chocolates & Dry Fruits',
-    desc: 'Roasted whole Palasa cashews and California almonds coated in rich artisanal dark chocolate. A velvety, crisp festive treat.',
+    category: 'flavours-mixes',
+    categoryLabel: 'Flavours & Mixes',
+    desc: 'Crisp roasted California almonds hand coated in smooth dark chocolate with a velvety snap and rich cocoa finish.',
     image: '/assets/pouch.jpeg',
     badge: 'Artisanal',
     options: [
-      { size: '100g', price: 220, mrp: 260 },
-      { size: '200g', price: 420, mrp: 499 },
+      { size: '100g', price: 210, mrp: 250 },
+      { size: '200g', price: 399, mrp: 480 },
     ],
   },
   {
     id: 'mix-dry-fruit',
-    name: 'Royal Mix Dry Fruit Selection',
-    grade: '5-in-1 Blend · Almond, Cashew, Pista, Raisin, Walnut',
-    category: 'dryfruits',
-    categoryLabel: 'Chocolates & Dry Fruits',
-    desc: 'Curated 5-variety luxury dry fruit blend: Palasa whole cashews, rich California almonds, green pistachios, golden Afghan raisins, and walnut halves.',
+    name: 'Dry Fruits Mix',
+    grade: '5-in-1 Luxury Blend · Almond, Cashew, Pista, Raisin, Walnut',
+    category: 'flavours-mixes',
+    categoryLabel: 'Flavours & Mixes',
+    desc: 'Curated 5-variety luxury dry fruit blend. Customize the cashew kernel caliber in your mix (W320 / W210 / W180).',
     image: '/assets/dryfruits-category.png',
     badge: 'Superfood Blend',
+    hasGradeCustomization: true,
+    customGrades: ['W320', 'W210', 'W180'],
+    gradeOptions: {
+      W320: [
+        { size: '100g each', price: 350, mrp: 420 },
+        { size: '200g each', price: 680, mrp: 799 },
+      ],
+      W210: [
+        { size: '100g each', price: 380, mrp: 460 },
+        { size: '200g each', price: 730, mrp: 860 },
+      ],
+      W180: [
+        { size: '100g each', price: 420, mrp: 510 },
+        { size: '200g each', price: 800, mrp: 940 },
+      ],
+    },
     options: [
       { size: '100g each', price: 350, mrp: 420 },
       { size: '200g each', price: 680, mrp: 799 },
     ],
   },
-  {
-    id: 'flavoured-cashew',
-    name: 'Flavoured Cashew (Coming Soon)',
-    grade: 'Gourmet Roasted Infusions',
-    category: 'dryfruits',
-    categoryLabel: 'Chocolates & Dry Fruits',
-    desc: 'Palasa whole cashews roasted in small batches with Peri Peri, Himalayan Pink Salt & Cracked Black Pepper. Pre order open now.',
-    image: '/assets/pouch.jpeg',
-    badge: 'Coming Soon',
-    isComingSoon: true,
-    options: [
-      { size: '100g', price: 190, mrp: 230 },
-      { size: '200g', price: 360, mrp: 420 },
-    ],
-  },
-
-  // --- Combos ---
-  {
-    id: 'combo-w320-w220',
-    name: 'W320 + W220 Combo',
-    grade: 'Signature Dual Pack · Classic & Jumbo',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'Pairing our most celebrated everyday whole cashew W320 with the generously sized W220. Balance of crunch and sweetness.',
-    image: '/assets/pouch.jpeg',
-    badge: 'Value Pair',
-    options: [
-      { size: '500g (250g × 2)', price: 680, mrp: 790 },
-      { size: '1kg (500g × 2)', price: 1320, mrp: 1540 },
-    ],
-  },
-  {
-    id: 'combo-w320-w180',
-    name: 'W320 + W180 Combo',
-    grade: 'Everyday Standard + Jumbo King',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'Experience the spectrum of Palasa sizes: the timeless W320 paired with the colossal, buttery W180 Jumbo King.',
-    image: '/assets/pouch.jpeg',
-    badge: 'Bestseller Duo',
-    options: [
-      { size: '500g (250g × 2)', price: 760, mrp: 880 },
-      { size: '1kg (500g × 2)', price: 1480, mrp: 1720 },
-    ],
-  },
-  {
-    id: 'combo-w220-w180',
-    name: 'W220 + W180 Combo',
-    grade: 'Exclusively Jumbo Pairing',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'The ultimate royal pairing for cashew connoisseurs: two exclusively jumbo grades side by side in luxury pouches.',
-    image: '/assets/pouch.jpeg',
-    badge: 'Royal Reserve',
-    options: [
-      { size: '500g (250g × 2)', price: 820, mrp: 960 },
-      { size: '1kg (500g × 2)', price: 1590, mrp: 1850 },
-    ],
-  },
-  {
-    id: 'combo-w320-skin',
-    name: 'W320 + Palasa Raw Skin Cashews Combo',
-    grade: 'White Whole + Heritage Roasted Skin',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'The clean, pristine crunch of classic W320 paired with the smoky, earthy fiber richness of Palasa Raw Skin Cashews (Pottu Pappu).',
-    image: '/assets/skin-cashew.png',
-    badge: 'Terroir Blend',
-    options: [
-      { size: '500g (250g × 2)', price: 590, mrp: 690 },
-      { size: '1kg (500g × 2)', price: 1150, mrp: 1350 },
-    ],
-  },
-  {
-    id: 'combo-w180-skin',
-    name: 'W180 + Palasa Raw Skin Cashews Combo',
-    grade: 'King Jumbo + Heritage Roasted Skin',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'Colossal W180 Jumbo Kings paired with traditional Palasa unpeeled skin cashews. The highest grade meets authentic rustic terroir.',
-    image: '/assets/skin-cashew.png',
-    badge: 'Connoisseur Pick',
-    options: [
-      { size: '500g (250g × 2)', price: 730, mrp: 850 },
-      { size: '1kg (500g × 2)', price: 1420, mrp: 1650 },
-    ],
-  },
-  {
-    id: 'combo-w220-skin',
-    name: 'W220 + Palasa Raw Skin Cashews Combo',
-    grade: 'Selected Jumbo + Roasted Skin-On',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'Generously calibrated W220 cashews paired with crunchy, unpeeled skin-on cashews from heirloom Palasa batches.',
-    image: '/assets/skin-cashew.png',
-    badge: 'Heritage Duo',
-    options: [
-      { size: '500g (250g × 2)', price: 650, mrp: 760 },
-      { size: '1kg (500g × 2)', price: 1270, mrp: 1490 },
-    ],
-  },
-  {
-    id: 'combo-w320-jh',
-    name: 'W320 + JH/SJH Combo',
-    grade: 'Whole Table Nut + Culinary Split',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'The versatile household combination: whole W320 kernels for snacking and clean JH/SJH split cashews for your daily cooking.',
-    image: '/assets/grade-jh.jpg',
-    badge: 'Home Essential',
-    options: [
-      { size: '500g (250g × 2)', price: 560, mrp: 660 },
-      { size: '1kg (500g × 2)', price: 1080, mrp: 1280 },
-    ],
-  },
-  {
-    id: 'combo-w220-jh',
-    name: 'W220 + JH/SJH Combo',
-    grade: 'Selected Jumbo + Culinary Split',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'Selected Jumbo kernels for evening tea time snacking paired with pristine split halves for rich gravies and festive sweets.',
-    image: '/assets/grade-jh.jpg',
-    badge: 'Kitchen & Table',
-    options: [
-      { size: '500g (250g × 2)', price: 620, mrp: 730 },
-      { size: '1kg (500g × 2)', price: 1190, mrp: 1410 },
-    ],
-  },
-  {
-    id: 'combo-w180-jh',
-    name: 'W180 + JH/SJH Combo',
-    grade: 'Jumbo King + Culinary Split',
-    category: 'combos',
-    categoryLabel: 'Curated Combos',
-    desc: 'The pinnacle of size: W180 King cashews paired with versatile split cashew kernels. Luxury table snacking meets kitchen perfection.',
-    image: '/assets/grade-jh.jpg',
-    badge: 'Royal Feast',
-    options: [
-      { size: '500g (250g × 2)', price: 700, mrp: 820 },
-      { size: '1kg (500g × 2)', price: 1350, mrp: 1580 },
-    ],
-  },
 ];
 
-const CATEGORIES = [
-  { id: 'all', label: 'All Products' },
-  { id: 'cashews', label: 'Whole Cashews' },
-  { id: 'skin', label: 'Skin Cashews (Pottu Pappu)' },
-  { id: 'splits', label: 'Split Cashews' },
-  { id: 'combos', label: 'Curated Combos' },
-  { id: 'dryfruits', label: 'Chocolates & Dry Fruits' },
+// Top-Level Navigation Tabs with clear label for Combos
+const TOP_CATEGORIES = [
+  { id: 'all', label: 'All', shortLabel: 'All' },
+  { id: 'cashews', label: 'Cashews', shortLabel: 'Cashews' },
+  { id: 'combos', label: 'Combos (Build Your Own)', shortLabel: 'Combos', hint: 'Build your own' },
+  { id: 'flavours-mixes', label: 'Flavours & Mixes', shortLabel: 'Flavours & Mixes' },
 ];
 
-const VISUAL_TILES = [
-  { name: 'Cashew', image: '/assets/cat-cashew.png', category: 'cashews' },
-  { name: 'Palasa Skin', image: '/assets/skin-cashew.png', category: 'skin' },
-  { name: 'Combos', image: '/assets/pouch.jpeg', category: 'combos' },
-  { name: 'Almond', image: '/assets/cat-almond.png', category: 'dryfruits' },
-  { name: 'Pista', image: '/assets/cat-pista.png', category: 'dryfruits' },
-  { name: 'Raisin', image: '/assets/cat-raisin.png', category: 'dryfruits' },
-  { name: 'Walnut', image: '/assets/cat-walnut.png', category: 'dryfruits' },
+// Secondary Grade Filter for Cashews
+const CASHEW_GRADES = [
+  { id: 'all', label: 'All Grades' },
+  { id: 'w320', label: 'W320' },
+  { id: 'w240', label: 'W240' },
+  { id: 'w180', label: 'W180' },
+  { id: 'skin', label: 'Skin Cashew (Pottu Pappu)' },
+  { id: 'splits', label: 'Splits' },
+];
+
+// Items available in Build Your Own Combo with weight options
+export const COMBO_BUILDER_ITEMS = [
+  {
+    id: 'cb-w180',
+    name: 'W180 Jumbo King',
+    tag: 'Jumbo King',
+    image: '/assets/pouch.jpeg',
+    weightOptions: [
+      { size: '250g', price: 460 },
+      { size: '500g', price: 890 },
+    ],
+  },
+  {
+    id: 'cb-w240',
+    name: 'W240 Selected Jumbo',
+    tag: 'Jumbo',
+    image: '/assets/pouch.jpeg',
+    weightOptions: [
+      { size: '250g', price: 380 },
+      { size: '500g', price: 740 },
+    ],
+  },
+  {
+    id: 'cb-w320',
+    name: 'W320 Classic Benchmark',
+    tag: 'Classic',
+    image: '/assets/pouch.jpeg',
+    weightOptions: [
+      { size: '250g', price: 320 },
+      { size: '500g', price: 620 },
+    ],
+  },
+  {
+    id: 'cb-skin',
+    name: 'Palasa Skin Cashew (Pottu Pappu)',
+    tag: 'Heritage',
+    image: '/assets/skin-cashew.png',
+    weightOptions: [
+      { size: '250g', price: 290 },
+      { size: '500g', price: 560 },
+    ],
+  },
+  {
+    id: 'cb-splits',
+    name: 'The Original Splits',
+    tag: 'Kitchen',
+    image: '/assets/grade-jh.jpg',
+    weightOptions: [
+      { size: '250g', price: 240 },
+      { size: '500g', price: 460 },
+    ],
+  },
+  {
+    id: 'cb-choco-cashew',
+    name: 'Chocolate Cashew',
+    tag: 'Artisanal',
+    image: '/assets/pouch.jpeg',
+    weightOptions: [
+      { size: '100g', price: 210 },
+      { size: '200g', price: 399 },
+    ],
+  },
+  {
+    id: 'cb-choco-badam',
+    name: 'Chocolate Badam',
+    tag: 'Artisanal',
+    image: '/assets/pouch.jpeg',
+    weightOptions: [
+      { size: '100g', price: 210 },
+      { size: '200g', price: 399 },
+    ],
+  },
+  {
+    id: 'cb-mix',
+    name: 'Dry Fruits Mix (5-in-1)',
+    tag: 'Superfood',
+    image: '/assets/dryfruits-category.png',
+    weightOptions: [
+      { size: '100g each', price: 350 },
+      { size: '200g each', price: 680 },
+    ],
+  },
 ];
 
 export default function ProductsPageClient() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSizeFilter, setSelectedSizeFilter] = useState('all');
-  const [selectedPriceFilter, setSelectedPriceFilter] = useState('all');
+  const [selectedGrade, setSelectedGrade] = useState('all');
+  const [selectedSizeFilter, setSelectedSizeFilter] = useState('');
+  const [selectedPriceFilter, setSelectedPriceFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   // Selected size per product: { [productId]: optionIndex }
   const [selectedSizes, setSelectedSizes] = useState({});
+  // Selected custom grade for customizable products: { [productId]: 'W320' | 'W210' | 'W180' }
+  const [selectedCustomGrades, setSelectedCustomGrades] = useState({
+    'choco-cashew': 'W320',
+    'mix-dry-fruit': 'W320',
+  });
 
-  // Cart state: [ { id, name, size, price, quantity, image } ]
+  // Cart state: [ { id, name, size, price, quantity, image, isCustomCombo?, comboItems? } ]
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Quick Order Modal
+  // Quick Order Modal (Buy Now)
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [directOrderItem, setDirectOrderItem] = useState(null);
   const [orderForm, setOrderForm] = useState({ name: '', phone: '', address: '', pincode: '' });
+
+  // Custom Combo Builder State:
+  // selectedComboState: { [itemId]: { checked: boolean, weightIndex: number } }
+  const [comboBuilderOpen, setComboBuilderOpen] = useState(false);
+  const [selectedComboState, setSelectedComboState] = useState({});
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -318,17 +303,90 @@ export default function ProductsPageClient() {
     setSelectedSizes((prev) => ({ ...prev, [productId]: optIndex }));
   };
 
-  const getProductOption = (product) => {
-    const idx = selectedSizes[product.id] ?? 0;
-    return product.options[idx] || product.options[0];
+  const handleCustomGradeChange = (productId, gradeKey) => {
+    setSelectedCustomGrades((prev) => ({ ...prev, [productId]: gradeKey }));
+    // reset size index when switching grade, unless size filter applies
+    setSelectedSizes((prev) => {
+      const updated = { ...prev, [productId]: 0 };
+      if (selectedSizeFilter) {
+        const prod = PRODUCTS_DATA.find((p) => p.id === productId);
+        if (prod && prod.gradeOptions && prod.gradeOptions[gradeKey]) {
+          const matchIdx = prod.gradeOptions[gradeKey].findIndex((o) =>
+            o.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
+          );
+          if (matchIdx !== -1) updated[productId] = matchIdx;
+        }
+      }
+      return updated;
+    });
   };
 
-  // Add to cart
+  // When clicking packaging size filter, set filter AND default matching products to that weight!
+  const handleSizeFilterClick = (sizeId) => {
+    const newFilter = selectedSizeFilter === sizeId ? '' : sizeId;
+    setSelectedSizeFilter(newFilter);
+
+    if (newFilter) {
+      // Automatically default matching products to that packaging size!
+      setSelectedSizes((prev) => {
+        const updated = { ...prev };
+        PRODUCTS_DATA.forEach((product) => {
+          const activeGrade = selectedCustomGrades[product.id] || product.customGrades?.[0];
+          const opts = product.hasGradeCustomization
+            ? product.gradeOptions[activeGrade]
+            : product.options;
+
+          const matchIdx = opts.findIndex((opt) =>
+            opt.size.toLowerCase().includes(newFilter.toLowerCase())
+          );
+          if (matchIdx !== -1) {
+            updated[product.id] = matchIdx;
+          }
+        });
+        return updated;
+      });
+    }
+  };
+
+  const getProductOption = (product) => {
+    const activeGrade = product.hasGradeCustomization
+      ? selectedCustomGrades[product.id] || product.customGrades[0]
+      : null;
+    const currentOptions = product.hasGradeCustomization
+      ? product.gradeOptions[activeGrade] || product.options
+      : product.options;
+
+    let idx = selectedSizes[product.id];
+    // If active size filter exists and this card has a matching option, default to it
+    if (selectedSizeFilter) {
+      const matchIdx = currentOptions.findIndex((opt) =>
+        opt.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
+      );
+      if (matchIdx !== -1 && (idx === undefined || !currentOptions[idx]?.size.toLowerCase().includes(selectedSizeFilter.toLowerCase()))) {
+        idx = matchIdx;
+      }
+    }
+
+    const safeIdx = idx !== undefined && idx < currentOptions.length ? idx : 0;
+    const opt = currentOptions[safeIdx] || currentOptions[0];
+
+    return {
+      ...opt,
+      activeIdx: safeIdx,
+      selectedGrade: activeGrade,
+    };
+  };
+
+  // Add standard product to cart
   const addToCart = (product) => {
     const opt = getProductOption(product);
+    const displayName = opt.selectedGrade
+      ? `${product.name} (${opt.selectedGrade})`
+      : product.name;
+
     setCart((prev) => {
       const existingIdx = prev.findIndex(
-        (item) => item.id === product.id && item.size === opt.size
+        (item) => item.id === product.id && item.size === opt.size && item.name === displayName
       );
       if (existingIdx > -1) {
         const next = [...prev];
@@ -339,7 +397,7 @@ export default function ProductsPageClient() {
         ...prev,
         {
           id: product.id,
-          name: product.name,
+          name: displayName,
           size: opt.size,
           price: opt.price,
           quantity: 1,
@@ -347,14 +405,19 @@ export default function ProductsPageClient() {
         },
       ];
     });
-    showToast(`Added ${product.name} (${opt.size}) to cart`);
+    showToast(`Added ${displayName} (${opt.size}) to bag`);
   };
 
   // Buy Now direct flow
   const handleBuyNow = (product) => {
     const opt = getProductOption(product);
+    const displayName = opt.selectedGrade
+      ? `${product.name} (${opt.selectedGrade})`
+      : product.name;
+
     setDirectOrderItem({
       ...product,
+      name: displayName,
       chosenSize: opt.size,
       chosenPrice: opt.price,
       quantity: 1,
@@ -383,12 +446,99 @@ export default function ProductsPageClient() {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
   }, [cart]);
 
-  // Filtering & Sorting
+  // Combo Builder Handlers with Real-Time Weight Switcher
+  const toggleComboItem = (id) => {
+    setSelectedComboState((prev) => {
+      const current = prev[id];
+      if (current && current.checked) {
+        return { ...prev, [id]: { ...current, checked: false } };
+      }
+      return {
+        ...prev,
+        [id]: { checked: true, weightIndex: current?.weightIndex ?? 0 },
+      };
+    });
+  };
+
+  const setComboItemWeight = (id, weightIndex) => {
+    setSelectedComboState((prev) => ({
+      ...prev,
+      [id]: { checked: true, weightIndex },
+    }));
+  };
+
+  const checkedComboEntries = useMemo(() => {
+    return COMBO_BUILDER_ITEMS.map((item) => {
+      const state = selectedComboState[item.id];
+      if (!state || !state.checked) return null;
+      const weightOpt = item.weightOptions[state.weightIndex ?? 0] || item.weightOptions[0];
+      return {
+        ...item,
+        selectedWeight: weightOpt.size,
+        selectedPrice: weightOpt.price,
+      };
+    }).filter(Boolean);
+  }, [selectedComboState]);
+
+  const comboRunningTotal = useMemo(() => {
+    return checkedComboEntries.reduce((sum, itm) => sum + itm.selectedPrice, 0);
+  }, [checkedComboEntries]);
+
+  // When adding custom combo to cart, save complete item breakup
+  const handleComboContinue = () => {
+    if (checkedComboEntries.length === 0) return;
+    const itemsBreakup = checkedComboEntries.map((itm) => ({
+      name: itm.name,
+      size: itm.selectedWeight,
+      price: itm.selectedPrice,
+    }));
+
+    const newComboBundle = {
+      id: `custom-combo-${Date.now()}`,
+      name: `Custom Palasa Combo Box`,
+      size: `${checkedComboEntries.length} Items Custom Pack`,
+      price: comboRunningTotal,
+      quantity: 1,
+      image: '/assets/pouch.jpeg',
+      isCustomCombo: true,
+      comboItems: itemsBreakup,
+    };
+
+    setCart((prev) => [...prev, newComboBundle]);
+    setComboBuilderOpen(false);
+    setSelectedComboState({});
+    showToast(`Added Custom Combo (${checkedComboEntries.length} items) to bag`);
+    setCartOpen(true);
+  };
+
+  const handleComboCancel = () => {
+    setSelectedComboState({});
+    setComboBuilderOpen(false);
+  };
+
+  // Category change handler
+  const handleCategorySelect = (catId) => {
+    setSelectedCategory(catId);
+    if (catId !== 'cashews') {
+      setSelectedGrade('all');
+    }
+  };
+
+  // Filtered & Sorted Products (strictly no prefilled combos)
   const filteredProducts = useMemo(() => {
     return PRODUCTS_DATA.filter((item) => {
       // Category filter
-      if (selectedCategory !== 'all' && item.category !== selectedCategory) {
-        return false;
+      if (selectedCategory !== 'all') {
+        if (selectedCategory === 'cashews' && item.category !== 'cashews') return false;
+        if (selectedCategory === 'flavours-mixes' && item.category !== 'flavours-mixes')
+          return false;
+        // Combos tab has no prefilled cards; only Build Your Own Combo showcase banner
+        if (selectedCategory === 'combos') return false;
+      }
+
+      // Secondary Cashew Grade filter
+      if (selectedCategory === 'cashews' && selectedGrade !== 'all') {
+        if (item.gradeKey !== selectedGrade) return false;
       }
 
       // Search query
@@ -401,8 +551,8 @@ export default function ProductsPageClient() {
         if (!match) return false;
       }
 
-      // Size filter
-      if (selectedSizeFilter !== 'all') {
+      // Package Size filter (100g, 200g, 250g, 500g)
+      if (selectedSizeFilter) {
         const hasSize = item.options.some((opt) =>
           opt.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
         );
@@ -410,7 +560,7 @@ export default function ProductsPageClient() {
       }
 
       // Price filter
-      if (selectedPriceFilter !== 'all') {
+      if (selectedPriceFilter) {
         const basePrice = item.options[0].price;
         if (selectedPriceFilter === 'under500' && basePrice >= 500) return false;
         if (
@@ -431,20 +581,46 @@ export default function ProductsPageClient() {
       }
       return 0; // default featured order
     });
-  }, [selectedCategory, searchQuery, selectedSizeFilter, selectedPriceFilter, sortBy]);
+  }, [
+    selectedCategory,
+    selectedGrade,
+    searchQuery,
+    selectedSizeFilter,
+    selectedPriceFilter,
+    sortBy,
+  ]);
+
+  const isFilterActive =
+    Boolean(selectedSizeFilter) ||
+    Boolean(selectedPriceFilter) ||
+    Boolean(searchQuery.trim()) ||
+    (selectedCategory === 'cashews' && selectedGrade !== 'all');
+
+  const resetFilters = () => {
+    setSelectedSizeFilter('');
+    setSelectedPriceFilter('');
+    setSearchQuery('');
+    setSelectedGrade('all');
+  };
 
   const sendWhatsAppCartOrder = () => {
     if (cart.length === 0) return;
     let text = `*New Order from The Original Website*\n\n`;
     cart.forEach((item, idx) => {
       text += `${idx + 1}. *${item.name}* (${item.size})\n   Qty: ${item.quantity} × ₹${item.price} = ₹${item.quantity * item.price}\n`;
+      if (item.isCustomCombo && item.comboItems) {
+        text += `   *Box Packup Breakdown:*\n`;
+        item.comboItems.forEach((ci) => {
+          text += `     • ${ci.name} (${ci.size}): ₹${ci.price}\n`;
+        });
+      }
     });
     text += `\n*Total Amount:* ₹${cartTotal}\n`;
     text += `*Delivery:* Fresh Palasa Dispatch Across India\n\n`;
     if (orderForm.name) text += `*Customer:* ${orderForm.name}\n`;
     if (orderForm.phone) text += `*Phone:* ${orderForm.phone}\n`;
     if (orderForm.address) text += `*Address:* ${orderForm.address}, ${orderForm.pincode}\n`;
-    text += `\nPlease confirm availability and payment details.`;
+    text += `\nPlease confirm dispatch and payment details.`;
 
     const url = `https://wa.me/919100267404?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
@@ -472,73 +648,90 @@ export default function ProductsPageClient() {
     <main className="shop-page">
       <Nav />
 
-      {/* Hero Header */}
+      {/* Hero Header - Minimal & Tightened */}
       <section className="shop-hero">
         <div className="shop-hero-inner">
-          <span className="section-tag">Palasa harvest catalog · Factory fresh stock</span>
-          <h1 className="shop-hero-title">
-            Pure Palasa Cashews, Crafted Combos &amp; Heritage Harvests.
-          </h1>
+          <span className="section-tag">Palasa harvest catalog · Direct factory roast</span>
+          <h1 className="shop-hero-title">The Harvest Catalog</h1>
           <p className="shop-hero-lead">
-            Every pouch is sealed immediately after slow roasting in Palasa. Free of warehouse staleness,
-            curated across top processing units, and delivered directly to your doorstep.
+            Slow-roasted whole calibers, skin-on heritage nuts, and artisanal confections sealed fresh at source in Palasa.
           </p>
         </div>
 
-        {/* Visual Category Tiles (Inspired by User Category Banner) */}
-        <div className="shop-visual-tiles-wrap">
-          <div className="shop-visual-tiles">
-            <button
-              className={`shop-visual-tile all-tile ${selectedCategory === 'all' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('all')}
-            >
-              <div className="visual-tile-circle">TO</div>
-              <span className="visual-tile-label">All Harvest</span>
-            </button>
-
-            {VISUAL_TILES.map((t) => (
+        {/* Streamlined Category Navigation */}
+        <div className="shop-category-nav-wrapper">
+          <nav className="shop-category-nav" aria-label="Product Categories">
+            {TOP_CATEGORIES.map((cat) => (
               <button
-                key={t.name}
-                className={`shop-visual-tile ${selectedCategory === t.category ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(t.category)}
+                key={cat.id}
+                type="button"
+                className={`shop-category-tab ${
+                  selectedCategory === cat.id ? 'active' : ''
+                }`}
+                onClick={() => handleCategorySelect(cat.id)}
               >
-                <div className="visual-tile-img-box">
-                  <img src={t.image} alt={t.name} className="visual-tile-img" />
-                </div>
-                <span className="visual-tile-label">{t.name}</span>
+                <span className="tab-desktop-label">{cat.label}</span>
+                <span className="tab-mobile-label">
+                  <span className="tab-mobile-title">{cat.shortLabel}</span>
+                  {cat.hint && <span className="tab-mobile-hint">{cat.hint}</span>}
+                </span>
               </button>
             ))}
-          </div>
+          </nav>
         </div>
+
+        {/* Secondary Grade Selector for Cashews */}
+        {selectedCategory === 'cashews' && (
+          <div className="shop-secondary-grades-wrap">
+            <div className="shop-secondary-grades" aria-label="Cashew Grades">
+              {CASHEW_GRADES.map((grade) => (
+                <button
+                  key={grade.id}
+                  type="button"
+                  className={`shop-grade-chip ${
+                    selectedGrade === grade.id ? 'active' : ''
+                  }`}
+                  onClick={() => setSelectedGrade(grade.id)}
+                >
+                  {grade.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* Main Catalog Area: Sidebar Filter + Products Grid */}
+      {/* Main Catalog Area: Simplified Sidebar + Boutique Grid */}
       <section className="shop-catalog-section">
         <div className="shop-catalog-inner">
           {/* Mobile Filter Toggle */}
           <div className="mobile-filter-bar">
             <button
+              type="button"
               className="btn-filter-toggle"
               onClick={() => setMobileFilterOpen((o) => !o)}
             >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
               <span>Filters &amp; Sort</span>
-              {selectedCategory !== 'all' || selectedSizeFilter !== 'all' ? (
-                <span className="filter-badge-dot"></span>
-              ) : null}
+              {isFilterActive && <span className="filter-badge-dot"></span>}
             </button>
             <span className="product-count-label">
-              {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'}
+              {selectedCategory === 'combos' ? '1 custom builder' : `${filteredProducts.length} items`}
             </span>
           </div>
 
           <div className="shop-layout">
-            {/* Sidebar Filter Menu */}
+            {/* Simplified Sidebar Filter Panel */}
             <aside className={`shop-sidebar ${mobileFilterOpen ? 'mobile-open' : ''}`}>
               <div className="sidebar-header">
-                <h3 className="sidebar-title">Filters</h3>
+                <h3 className="sidebar-title">Refine Harvest</h3>
                 <button
+                  type="button"
                   className="sidebar-close-btn"
                   onClick={() => setMobileFilterOpen(false)}
+                  aria-label="Close filters"
                 >
                   &times;
                 </button>
@@ -547,61 +740,46 @@ export default function ProductsPageClient() {
               {/* Search */}
               <div className="filter-group">
                 <label className="filter-group-label" htmlFor="shop-search">
-                  Search harvest
+                  Search
                 </label>
                 <input
                   id="shop-search"
                   type="text"
-                  placeholder="e.g. W180, Skin, Combo..."
+                  placeholder="e.g. W180, Skin, Chocolate..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="filter-search-input"
                 />
               </div>
 
-              {/* Category Filter */}
+              {/* Packaging Size Filter: Clicking a pill filters AND selects that size on all cards */}
               <div className="filter-group">
-                <h4 className="filter-group-label">Categories</h4>
-                <div className="filter-options-list">
-                  {CATEGORIES.map((cat) => {
-                    const count =
-                      cat.id === 'all'
-                        ? PRODUCTS_DATA.length
-                        : PRODUCTS_DATA.filter((p) => p.category === cat.id).length;
-                    return (
-                      <button
-                        key={cat.id}
-                        className={`filter-option-btn ${
-                          selectedCategory === cat.id ? 'active' : ''
-                        }`}
-                        onClick={() => setSelectedCategory(cat.id)}
-                      >
-                        <span>{cat.label}</span>
-                        <span className="filter-count">({count})</span>
-                      </button>
-                    );
-                  })}
+                <div className="filter-label-row">
+                  <h4 className="filter-group-label">Packaging Size</h4>
+                  {selectedSizeFilter && (
+                    <button
+                      type="button"
+                      className="filter-clear-sub"
+                      onClick={() => setSelectedSizeFilter('')}
+                    >
+                      Clear
+                    </button>
+                  )}
                 </div>
-              </div>
-
-              {/* Package Size Filter */}
-              <div className="filter-group">
-                <h4 className="filter-group-label">Package Size</h4>
                 <div className="filter-pills-row">
                   {[
-                    { id: 'all', label: 'All Sizes' },
-                    { id: '250', label: '250g' },
-                    { id: '500', label: '500g' },
-                    { id: '1kg', label: '1kg Combo' },
                     { id: '100', label: '100g' },
                     { id: '200', label: '200g' },
+                    { id: '250', label: '250g' },
+                    { id: '500', label: '500g' },
                   ].map((size) => (
                     <button
                       key={size.id}
+                      type="button"
                       className={`filter-pill ${
                         selectedSizeFilter === size.id ? 'active' : ''
                       }`}
-                      onClick={() => setSelectedSizeFilter(size.id)}
+                      onClick={() => handleSizeFilterClick(size.id)}
                     >
                       {size.label}
                     </button>
@@ -611,95 +789,130 @@ export default function ProductsPageClient() {
 
               {/* Price Filter */}
               <div className="filter-group">
-                <h4 className="filter-group-label">Price Range</h4>
+                <div className="filter-label-row">
+                  <h4 className="filter-group-label">Price Range</h4>
+                  {selectedPriceFilter && (
+                    <button
+                      type="button"
+                      className="filter-clear-sub"
+                      onClick={() => setSelectedPriceFilter('')}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
                 <div className="filter-options-list">
                   {[
-                    { id: 'all', label: 'All prices' },
                     { id: 'under500', label: 'Under ₹500' },
                     { id: '500to1000', label: '₹500 to ₹1,000' },
                     { id: 'above1000', label: 'Above ₹1,000' },
                   ].map((pr) => (
                     <button
                       key={pr.id}
+                      type="button"
                       className={`filter-option-btn ${
                         selectedPriceFilter === pr.id ? 'active' : ''
                       }`}
-                      onClick={() => setSelectedPriceFilter(pr.id)}
+                      onClick={() =>
+                        setSelectedPriceFilter(selectedPriceFilter === pr.id ? '' : pr.id)
+                      }
                     >
-                      {pr.label}
+                      <span>{pr.label}</span>
+                      {selectedPriceFilter === pr.id && (
+                        <span className="filter-active-tick">✓</span>
+                      )}
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Reset Filters */}
-              {(selectedCategory !== 'all' ||
-                selectedSizeFilter !== 'all' ||
-                selectedPriceFilter !== 'all' ||
-                searchQuery !== '') && (
+              {isFilterActive && (
                 <button
+                  type="button"
                   className="filter-reset-btn"
-                  onClick={() => {
-                    setSelectedCategory('all');
-                    setSelectedSizeFilter('all');
-                    setSelectedPriceFilter('all');
-                    setSearchQuery('');
-                  }}
+                  onClick={resetFilters}
                 >
-                  Reset all filters
+                  Clear all active filters
                 </button>
               )}
             </aside>
 
-            {/* Product Grid Area */}
+            {/* Product Grid Main Area */}
             <div className="shop-main">
               {/* Top Controls Bar */}
               <div className="shop-top-bar">
                 <span className="shop-results-count">
-                  Showing <strong>{filteredProducts.length}</strong> items
+                  {selectedCategory === 'combos'
+                    ? 'Bespoke Combo Builder'
+                    : `Showing ${filteredProducts.length} harvests`}
                 </span>
 
-                <div className="shop-sort-wrap">
-                  <label htmlFor="shop-sort" className="sort-label">
-                    Sort by:
-                  </label>
-                  <select
-                    id="shop-sort"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="shop-sort-select"
-                  >
-                    <option value="featured">Featured Curations</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                  </select>
-                </div>
+                {selectedCategory !== 'combos' && (
+                  <div className="shop-sort-wrap">
+                    <label htmlFor="shop-sort" className="sort-label">
+                      Sort by:
+                    </label>
+                    <select
+                      id="shop-sort"
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="shop-sort-select"
+                    >
+                      <option value="featured">Featured Curations</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
-              {/* Grid */}
-              {filteredProducts.length === 0 ? (
-                <div className="shop-empty-state">
-                  <h3 className="empty-title">No products match your filter</h3>
-                  <p className="empty-text">
-                    Try adjusting your category, package size, or search criteria.
-                  </p>
-                  <button
-                    className="btn-primary"
-                    onClick={() => {
-                      setSelectedCategory('all');
-                      setSelectedSizeFilter('all');
-                      setSelectedPriceFilter('all');
-                      setSearchQuery('');
-                    }}
-                  >
-                    Show all harvests
-                  </button>
+              {/* COMBOS TAB: ELEGANT WIDE SHOWCASE BANNER (No awkward narrow card) */}
+              {selectedCategory === 'combos' && (
+                <div className="combo-showcase-banner">
+                  <div className="combo-banner-left">
+                    <div className="combo-banner-badge-row">
+                      <span className="shop-card-badge combo-badge">Custom Combo</span>
+                      <span className="combo-banner-hint">You can build your own combo</span>
+                    </div>
+                    <h3 className="combo-banner-title">Build Your Bespoke Harvest Combo</h3>
+                    <p className="combo-banner-desc">
+                      Handpick any combination of slow-roasted whole cashews (250g / 500g) and artisanal dark chocolates (100g / 200g). Packaged factory-fresh in Palasa with live running totals.
+                    </p>
+                    <div className="combo-builder-perks horizontal">
+                      <span className="combo-perk-tag">✓ Choose weights per nut</span>
+                      <span className="combo-perk-tag">✓ Real-time live total calculation</span>
+                      <span className="combo-perk-tag">✓ Fresh Palasa gift packing</span>
+                    </div>
+                  </div>
+                  <div className="combo-banner-right">
+                    <button
+                      type="button"
+                      className="btn-buy-now btn-open-builder-banner"
+                      onClick={() => setComboBuilderOpen(true)}
+                    >
+                      <span>Start Building Your Box</span>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              ) : (
+              )}
+
+              {/* Standard Catalog Grid (Notice: Custom Combo is removed from 'All' grid) */}
+              {selectedCategory !== 'combos' && (
                 <div className="shop-products-grid">
                   {filteredProducts.map((product) => {
-                    const activeOptIdx = selectedSizes[product.id] ?? 0;
-                    const activeOpt = product.options[activeOptIdx] || product.options[0];
+                    const optData = getProductOption(product);
+                    const activeOpt = optData;
+                    const activeOptIdx = optData.activeIdx;
+                    const activeGrade = optData.selectedGrade;
+
+                    const currentOptions = product.hasGradeCustomization
+                      ? product.gradeOptions[activeGrade] || product.options
+                      : product.options;
 
                     return (
                       <article key={product.id} className="shop-product-card">
@@ -716,30 +929,60 @@ export default function ProductsPageClient() {
                           )}
                         </div>
 
-                        {/* Content */}
+                        {/* Card Content */}
                         <div className="shop-card-body">
                           <span className="shop-card-grade">{product.grade}</span>
                           <h3 className="shop-card-title">{product.name}</h3>
                           <p className="shop-card-desc">{product.desc}</p>
 
-                          {/* Size Selection Pills */}
-                          <div className="shop-size-selector">
-                            <span className="size-selector-label">Available Sizes:</span>
-                            <div className="size-pills">
-                              {product.options.map((opt, idx) => (
-                                <button
-                                  key={opt.size}
-                                  type="button"
-                                  className={`size-pill ${
-                                    activeOptIdx === idx ? 'active' : ''
-                                  }`}
-                                  onClick={() => handleSizeChange(product.id, idx)}
-                                >
-                                  {opt.size}
-                                </button>
-                              ))}
+                          {/* Grade Customization Selector (for Chocolate Cashew & Dry Fruits Mix) */}
+                          {product.hasGradeCustomization ? (
+                            <div className="shop-grade-custom-selector">
+                              <span className="grade-custom-label">Cashew Grade:</span>
+                              <div className="grade-custom-pills">
+                                {product.customGrades.map((gKey) => (
+                                  <button
+                                    key={gKey}
+                                    type="button"
+                                    className={`grade-custom-pill ${
+                                      activeGrade === gKey ? 'active' : ''
+                                    }`}
+                                    onClick={() => handleCustomGradeChange(product.id, gKey)}
+                                  >
+                                    {gKey}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            /* Spacer to ensure perfect vertical baseline alignment across all cards */
+                            <div className="shop-grade-custom-spacer" aria-hidden="true" />
+                          )}
+
+                          {/* Size Selection Pills */}
+                          {currentOptions.length > 1 ? (
+                            <div className="shop-size-selector">
+                              <span className="size-selector-label">Select Weight:</span>
+                              <div className="size-pills">
+                                {currentOptions.map((opt, idx) => (
+                                  <button
+                                    key={opt.size}
+                                    type="button"
+                                    className={`size-pill ${
+                                      activeOptIdx === idx ? 'active' : ''
+                                    }`}
+                                    onClick={() => handleSizeChange(product.id, idx)}
+                                  >
+                                    {opt.size}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="shop-size-selector single-size">
+                              <span className="single-size-tag">{activeOpt.size}</span>
+                            </div>
+                          )}
 
                           {/* Price Display */}
                           <div className="shop-card-price-row">
@@ -749,19 +992,20 @@ export default function ProductsPageClient() {
                                 <span className="mrp-price">₹{activeOpt.mrp}</span>
                               )}
                             </div>
-                            <span className="tax-inclusive-tag">All taxes included</span>
+                            <span className="tax-inclusive-tag">Tax incl.</span>
                           </div>
 
-                          {/* Action Buttons: Add to Cart & Buy Now */}
+                          {/* Action Buttons */}
                           <div className="shop-card-actions">
                             <button
                               type="button"
                               className="btn-add-to-cart"
                               onClick={() => addToCart(product)}
+                              aria-label={`Add ${product.name} to cart`}
                             >
                               <svg
-                                width="17"
-                                height="17"
+                                width="15"
+                                height="15"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -773,7 +1017,7 @@ export default function ProductsPageClient() {
                                 <circle cx="20" cy="21" r="1"></circle>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                               </svg>
-                              <span>Add to cart</span>
+                              <span>Add</span>
                             </button>
 
                             <button
@@ -790,22 +1034,290 @@ export default function ProductsPageClient() {
                   })}
                 </div>
               )}
+
+              {/* Empty state if nothing matches */}
+              {selectedCategory !== 'combos' && filteredProducts.length === 0 && (
+                <div className="shop-empty-state">
+                  <h3 className="empty-title">No harvests found</h3>
+                  <p className="empty-text">
+                    Try clearing your search or switching to another category.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-buy-now"
+                    onClick={resetFilters}
+                  >
+                    Reset all filters
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
+      {/* =========================================================================
+          BUILD YOUR OWN COMBO SELECTOR (WITH WEIGHT FILTER PER ITEM)
+          Cashews: 250g & 500g
+          Chocolates: 100g & 200g
+          Dry Fruits Mix: 100g each & 200g each
+          ========================================================================= */}
+      {comboBuilderOpen && (
+        <div
+          className="combo-modal-overlay"
+          onClick={handleComboCancel}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="combo-modal-container"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="combo-modal-header">
+              <div>
+                <span className="combo-modal-subtitle">Custom Curation</span>
+                <h3 className="combo-modal-title">Build Your Own Combo</h3>
+              </div>
+              <button
+                type="button"
+                className="combo-modal-close-btn"
+                onClick={handleComboCancel}
+                aria-label="Close Combo Builder"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Modal Content Body */}
+            <div className="combo-modal-body">
+              {/* DESKTOP ITEM GRID VIEW */}
+              <div className="combo-desktop-grid">
+                <div className="combo-items-grid">
+                  {COMBO_BUILDER_ITEMS.map((item) => {
+                    const itemState = selectedComboState[item.id];
+                    const isChecked = Boolean(itemState?.checked);
+                    const currentWeightIdx = itemState?.weightIndex ?? 0;
+                    const activeWeight = item.weightOptions[currentWeightIdx] || item.weightOptions[0];
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`combo-grid-card ${isChecked ? 'selected' : ''}`}
+                      >
+                        <div
+                          className="combo-grid-card-check"
+                          onClick={() => toggleComboItem(item.id)}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {}}
+                            aria-label={`Select ${item.name}`}
+                          />
+                        </div>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="combo-grid-card-img"
+                          onClick={() => toggleComboItem(item.id)}
+                        />
+                        <div className="combo-grid-card-content">
+                          <div className="combo-grid-card-top" onClick={() => toggleComboItem(item.id)}>
+                            <span className="combo-grid-card-tag">{item.tag}</span>
+                            <h4 className="combo-grid-card-name">{item.name}</h4>
+                          </div>
+
+                          {/* Weight Filter Selector on Desktop Card */}
+                          <div className="combo-item-weight-row">
+                            <span className="combo-weight-label">Weight:</span>
+                            <div className="combo-weight-pills">
+                              {item.weightOptions.map((wOpt, wIdx) => (
+                                <button
+                                  key={wOpt.size}
+                                  type="button"
+                                  className={`combo-weight-pill ${
+                                    currentWeightIdx === wIdx && isChecked ? 'active' : ''
+                                  }`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setComboItemWeight(item.id, wIdx);
+                                  }}
+                                >
+                                  {wOpt.size}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="combo-grid-card-price" onClick={() => toggleComboItem(item.id)}>
+                            ₹{activeWeight.price}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* DESKTOP STICKY SIDEBAR / RUNNING SUMMARY */}
+                <aside className="combo-desktop-sidebar">
+                  <div className="combo-summary-box">
+                    <h4 className="combo-summary-title">Your Custom Box</h4>
+                    <p className="combo-summary-desc">
+                      Select cashews (250g/500g) and confections (100g/200g). Packaged factory-fresh in Palasa.
+                    </p>
+
+                    <div className="combo-selected-list">
+                      {checkedComboEntries.length === 0 ? (
+                        <div className="combo-selected-empty">
+                          No items checked yet. Select any item on the left and choose your preferred weight.
+                        </div>
+                      ) : (
+                        checkedComboEntries.map((itm) => (
+                          <div key={itm.id} className="combo-selected-row">
+                            <div className="combo-selected-left">
+                              <span className="combo-selected-name">{itm.name}</span>
+                              <span className="combo-selected-weight-tag">{itm.selectedWeight}</span>
+                            </div>
+                            <span className="combo-selected-price">₹{itm.selectedPrice}</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="combo-total-divider"></div>
+
+                    <div className="combo-summary-total-row">
+                      <span>Live Running Total:</span>
+                      <strong className="combo-summary-total-amt">
+                        ₹{comboRunningTotal}
+                      </strong>
+                    </div>
+                    <span className="combo-summary-count">
+                      {checkedComboEntries.length} {checkedComboEntries.length === 1 ? 'item' : 'items'} in combo
+                    </span>
+
+                    <div className="combo-desktop-actions">
+                      <button
+                        type="button"
+                        className="btn-buy-now btn-combo-continue"
+                        disabled={checkedComboEntries.length === 0}
+                        onClick={handleComboContinue}
+                      >
+                        Add Custom Combo to Bag (₹{comboRunningTotal})
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-combo-cancel"
+                        onClick={handleComboCancel}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+
+              {/* MOBILE SINGLE-COLUMN LIST VIEW WITH WEIGHT SELECTOR PER ROW */}
+              <div className="combo-mobile-list-view">
+                <p className="combo-mobile-instruction">
+                  Check items and select packaging weight to build your bespoke box:
+                </p>
+                <div className="combo-mobile-rows">
+                  {COMBO_BUILDER_ITEMS.map((item) => {
+                    const itemState = selectedComboState[item.id];
+                    const isChecked = Boolean(itemState?.checked);
+                    const currentWeightIdx = itemState?.weightIndex ?? 0;
+                    const activeWeight = item.weightOptions[currentWeightIdx] || item.weightOptions[0];
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`combo-mobile-row ${isChecked ? 'selected' : ''}`}
+                      >
+                        <div
+                          className="combo-mobile-row-left"
+                          onClick={() => toggleComboItem(item.id)}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {}}
+                            className="combo-mobile-checkbox"
+                          />
+                          <div className="combo-mobile-row-info">
+                            <span className="combo-mobile-row-name">{item.name}</span>
+                            <span className="combo-mobile-row-meta">{item.tag}</span>
+                          </div>
+                        </div>
+
+                        {/* Weight Switcher Pills in Mobile Row */}
+                        <div className="combo-mobile-weight-controls">
+                          <div className="combo-weight-pills">
+                            {item.weightOptions.map((wOpt, wIdx) => (
+                              <button
+                                key={wOpt.size}
+                                type="button"
+                                className={`combo-weight-pill ${
+                                  currentWeightIdx === wIdx && isChecked ? 'active' : ''
+                                }`}
+                                onClick={() => setComboItemWeight(item.id, wIdx)}
+                              >
+                                {wOpt.size}
+                              </button>
+                            ))}
+                          </div>
+                          <span className="combo-mobile-row-price">₹{activeWeight.price}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* MOBILE STICKY BOTTOM BAR (Total + Continue + Cancel) */}
+            <div className="combo-mobile-sticky-bar">
+              <div className="combo-mobile-sticky-left">
+                <span className="combo-mobile-sticky-count">
+                  {checkedComboEntries.length} {checkedComboEntries.length === 1 ? 'item' : 'items'}
+                </span>
+                <span className="combo-mobile-sticky-total">₹{comboRunningTotal}</span>
+              </div>
+              <div className="combo-mobile-sticky-actions">
+                <button
+                  type="button"
+                  className="btn-combo-mobile-cancel"
+                  onClick={handleComboCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn-combo-mobile-continue"
+                  disabled={checkedComboEntries.length === 0}
+                  onClick={handleComboContinue}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating Cart Button */}
       {cartItemCount > 0 && (
         <button
+          type="button"
           className="floating-cart-btn"
           onClick={() => setCartOpen(true)}
           aria-label="View Cart"
         >
           <div className="cart-badge-count">{cartItemCount}</div>
           <svg
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -821,7 +1333,7 @@ export default function ProductsPageClient() {
         </button>
       )}
 
-      {/* Cart Slide-Over Drawer */}
+      {/* Cart Slide-Over Drawer with Combo Breakup */}
       {cartOpen && (
         <div className="cart-drawer-overlay" onClick={() => setCartOpen(false)}>
           <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
@@ -831,8 +1343,10 @@ export default function ProductsPageClient() {
                 <span className="cart-items-count">({cartItemCount} items)</span>
               </div>
               <button
+                type="button"
                 className="cart-close-btn"
                 onClick={() => setCartOpen(false)}
+                aria-label="Close Bag"
               >
                 &times;
               </button>
@@ -842,7 +1356,8 @@ export default function ProductsPageClient() {
               <div className="cart-empty">
                 <p>Your bag is empty.</p>
                 <button
-                  className="btn-primary"
+                  type="button"
+                  className="btn-buy-now"
                   onClick={() => setCartOpen(false)}
                 >
                   Explore products
@@ -852,37 +1367,58 @@ export default function ProductsPageClient() {
               <>
                 <div className="cart-items-list">
                   {cart.map((item, idx) => (
-                    <div key={`${item.id}-${item.size}`} className="cart-item-row">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="cart-item-thumb"
-                      />
-                      <div className="cart-item-info">
-                        <h4 className="cart-item-name">{item.name}</h4>
-                        <span className="cart-item-size">{item.size}</span>
-                        <div className="cart-item-price">₹{item.price} each</div>
+                    <div key={`${item.id}-${item.size}-${item.name}`} className="cart-item-row-wrapper">
+                      <div className="cart-item-row">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="cart-item-thumb"
+                        />
+                        <div className="cart-item-info">
+                          <h4 className="cart-item-name">{item.name}</h4>
+                          <span className="cart-item-size">{item.size}</span>
+                          <div className="cart-item-price">₹{item.price} each</div>
+                        </div>
+
+                        <div className="cart-qty-controls">
+                          <button
+                            type="button"
+                            className="qty-btn"
+                            onClick={() => updateCartQty(idx, -1)}
+                            aria-label="Decrease quantity"
+                          >
+                            -
+                          </button>
+                          <span className="qty-num">{item.quantity}</span>
+                          <button
+                            type="button"
+                            className="qty-btn"
+                            onClick={() => updateCartQty(idx, 1)}
+                            aria-label="Increase quantity"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <div className="cart-item-total">
+                          ₹{item.price * item.quantity}
+                        </div>
                       </div>
 
-                      <div className="cart-qty-controls">
-                        <button
-                          className="qty-btn"
-                          onClick={() => updateCartQty(idx, -1)}
-                        >
-                          -
-                        </button>
-                        <span className="qty-num">{item.quantity}</span>
-                        <button
-                          className="qty-btn"
-                          onClick={() => updateCartQty(idx, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <div className="cart-item-total">
-                        ₹{item.price * item.quantity}
-                      </div>
+                      {/* Breakup of Custom Combo Packup */}
+                      {item.isCustomCombo && item.comboItems && (
+                        <div className="cart-combo-breakdown">
+                          <span className="cart-combo-breakdown-title">Box Contents:</span>
+                          <ul className="cart-combo-items-list">
+                            {item.comboItems.map((ci, cIdx) => (
+                              <li key={cIdx} className="cart-combo-subitem">
+                                <span className="combo-subitem-name">• {ci.name} ({ci.size})</span>
+                                <span className="combo-subitem-price">₹{ci.price}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -897,6 +1433,7 @@ export default function ProductsPageClient() {
                   </div>
 
                   <button
+                    type="button"
                     className="btn-checkout-wa"
                     onClick={sendWhatsAppCartOrder}
                   >
@@ -925,10 +1462,12 @@ export default function ProductsPageClient() {
         >
           <div className="order-modal" onClick={(e) => e.stopPropagation()}>
             <div className="order-modal-header">
-              <h3 className="order-modal-title">Instant Harvest Order</h3>
+              <h3 className="order-modal-title">Direct Harvest Order</h3>
               <button
+                type="button"
                 className="sidebar-close-btn"
                 onClick={() => setOrderModalOpen(false)}
+                aria-label="Close Order Modal"
               >
                 &times;
               </button>
@@ -1012,7 +1551,7 @@ export default function ProductsPageClient() {
               </div>
 
               <div className="order-modal-actions">
-                <button type="submit" className="btn-primary modal-submit">
+                <button type="submit" className="btn-buy-now modal-submit">
                   Confirm &amp; Order on WhatsApp
                 </button>
                 <p className="order-form-disclaimer">
