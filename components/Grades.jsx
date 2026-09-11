@@ -72,6 +72,8 @@ export default function Grades() {
                     <img
                       src={g.image}
                       alt={`${g.label} ${g.sub} Palasa cashew caliber`}
+                      width={400}
+                      height={400}
                       loading="lazy"
                     />
                   </div>

@@ -126,6 +126,17 @@ export default function Footer() {
           <p className="footer-copy">
             &copy; {new Date().getFullYear()} The Original Cashew Co. All rights reserved.
           </p>
+
+          <div className="footer-legal">
+            <a href="/shipping-policy">Shipping Policy</a>
+            <span>·</span>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <span>·</span>
+            <a href="/terms-conditions">Terms &amp; Conditions</a>
+            <span>·</span>
+            <a href="/refund-policy">Refund Policy</a>
+          </div>
+
           <div className="footer-legal">
             <a href="#home">Back to top</a>
             <span>·</span>

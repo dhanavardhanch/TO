@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import Nav from './Nav';
 import Footer from './Footer';
+import { useShop } from '../context/ShopContext';
 
 // Catalog Data (No prefilled combos; strict Flavours & Mixes)
 export const PRODUCTS_DATA = [
@@ -377,12 +379,15 @@ export default function ProductsPageClient() {
     };
   };
 
-  // Add standard product to cart
+  const { addToCart: ctxAddToCart, toggleWishlist, isWishlisted } = useShop();
+
+  // Add standard product to cart (also syncs to global context)
   const addToCart = (product) => {
     const opt = getProductOption(product);
     const displayName = opt.selectedGrade
       ? `${product.name} (${opt.selectedGrade})`
       : product.name;
+    const cartItemId = `${product.id}-${opt.size}-${opt.selectedGrade || 'default'}`;
 
     setCart((prev) => {
       const existingIdx = prev.findIndex(
@@ -404,6 +409,17 @@ export default function ProductsPageClient() {
           image: product.image,
         },
       ];
+    });
+    // Sync to global context so cart page shows items
+    ctxAddToCart({
+      id: cartItemId,
+      productId: product.id,
+      name: displayName,
+      size: opt.size,
+      price: opt.price,
+      mrp: opt.mrp,
+      image: product.image,
+      quantity: 1,
     });
     showToast(`Added ${displayName} (${opt.size}) to bag`);
   };
@@ -916,23 +932,54 @@ export default function ProductsPageClient() {
 
                     return (
                       <article key={product.id} className="shop-product-card">
-                        {/* Image Showcase */}
-                        <div className="shop-card-media">
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            loading="lazy"
-                            className="shop-card-img"
-                          />
-                          {product.badge && (
-                            <span className="shop-card-badge">{product.badge}</span>
-                          )}
-                        </div>
+                        {/* Image Showcase (Links to PDP) */}
+                        <Link
+                          href={`/products/${product.id}`}
+                          className="shop-card-media-link"
+                          aria-label={`View details for ${product.name}`}
+                        >
+                          <div className="shop-card-media">
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              width={1178}
+                              height={1280}
+                              loading="lazy"
+                              className="shop-card-img"
+                            />
+                            {product.badge && (
+                              <span className="shop-card-badge">{product.badge}</span>
+                            )}
+                          </div>
+                        </Link>
+
+                        {/* Wishlist Heart */}
+                        <button
+                          type="button"
+                          className={`card-wishlist-btn ${isWishlisted(product.id) ? 'wishlisted' : ''}`}
+                          onClick={() => toggleWishlist({
+                            id: product.id,
+                            name: product.name,
+                            grade: product.grade,
+                            image: product.image,
+                            desc: product.desc,
+                            options: product.options,
+                          })}
+                          aria-label={isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill={isWishlisted(product.id) ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
 
                         {/* Card Content */}
                         <div className="shop-card-body">
                           <span className="shop-card-grade">{product.grade}</span>
-                          <h3 className="shop-card-title">{product.name}</h3>
+                          <h3 className="shop-card-title">
+                            <Link href={`/products/${product.id}`} className="shop-title-link">
+                              {product.name}
+                            </Link>
+                          </h3>
                           <p className="shop-card-desc">{product.desc}</p>
 
                           {/* Grade Customization Selector (for Chocolate Cashew & Dry Fruits Mix) */}
@@ -1004,8 +1051,8 @@ export default function ProductsPageClient() {
                               aria-label={`Add ${product.name} to cart`}
                             >
                               <svg
-                                width="15"
-                                height="15"
+                                width="14"
+                                height="14"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -1017,7 +1064,7 @@ export default function ProductsPageClient() {
                                 <circle cx="20" cy="21" r="1"></circle>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                               </svg>
-                              <span>Add</span>
+                              <span>Add to cart</span>
                             </button>
 
                             <button
