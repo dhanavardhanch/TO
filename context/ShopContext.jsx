@@ -1,18 +1,15 @@
 'use client';
 
-import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import { createContext, useContext, useReducer, useEffect, useState, useCallback } from 'react';
 
 // ─── Initial state ────────────────────────────────────────────────────────────
 const initialState = {
   cart: [],       // [{ id, productId, name, size, grade, price, mrp, image, quantity }]
-  wishlist: [],   // [{ id, name, grade, image, options, desc }]
 };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
 function shopReducer(state, action) {
   switch (action.type) {
-
-    // CART
     case 'CART_ADD': {
       const { item } = action;
       const existing = state.cart.find((c) => c.id === item.id);
@@ -44,60 +41,127 @@ function shopReducer(state, action) {
     case 'CART_SET':
       return { ...state, cart: action.cart };
 
-    // WISHLIST
-    case 'WISH_TOGGLE': {
-      const { product } = action;
-      const inWish = state.wishlist.some((w) => w.id === product.id);
-      return {
-        ...state,
-        wishlist: inWish
-          ? state.wishlist.filter((w) => w.id !== product.id)
-          : [...state.wishlist, product],
-      };
-    }
-
-    case 'WISH_REMOVE':
-      return { ...state, wishlist: state.wishlist.filter((w) => w.id !== action.id) };
-
-    case 'WISH_CLEAR':
-      return { ...state, wishlist: [] };
-
-    case 'WISH_SET':
-      return { ...state, wishlist: action.wishlist };
-
     default:
       return state;
   }
 }
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+export const COINS_PER_ORDER = 100;      // 100 Coins per delivered order
+export const COINS_VALUE_RUPEES = 10;    // 100 Coins = Rs.10 (1 coin = Rs.0.10)
+export const REDEEM_THRESHOLD = 5000;    // 5,000 Coins needed to redeem
+export const REDEEM_DISCOUNT = 500;      // 5,000 Coins = Rs.500 flat discount
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 const ShopContext = createContext(null);
 
 export function ShopProvider({ children }) {
   const [state, dispatch] = useReducer(shopReducer, initialState);
+  const [coins, setCoins] = useState(100); // 100 initial welcome coins
+  const [isCoinsModalOpen, setIsCoinsModalOpen] = useState(false);
+  const [isCoinsRedeemed, setIsCoinsRedeemed] = useState(false);
 
-  // Hydrate from localStorage on mount
+  const [transactions, setTransactions] = useState([]);
+
+  // Hydrate cart, coins & transactions from localStorage on mount
   useEffect(() => {
     try {
       const savedCart = JSON.parse(localStorage.getItem('to_cart') || '[]');
-      const savedWishlist = JSON.parse(localStorage.getItem('to_wishlist') || '[]');
       if (savedCart.length) dispatch({ type: 'CART_SET', cart: savedCart });
-      if (savedWishlist.length) dispatch({ type: 'WISH_SET', wishlist: savedWishlist });
+      const savedCoins = localStorage.getItem('to_coins');
+      if (savedCoins !== null) {
+        setCoins(Number(savedCoins));
+      } else {
+        localStorage.setItem('to_coins', '100');
+      }
+      const savedTxns = JSON.parse(localStorage.getItem('to_transactions') || 'null');
+      if (savedTxns && savedTxns.length) {
+        setTransactions(savedTxns);
+      } else {
+        const initialTxn = [
+          {
+            id: 'TXN-WLC-01',
+            orderId: 'WELCOME-GIFT',
+            title: 'Welcome Reward',
+            desc: 'New account activation credit',
+            type: 'credit',
+            amount: 100,
+            status: 'Delivered',
+            date: '12 Sep 2026',
+          },
+        ];
+        setTransactions(initialTxn);
+        localStorage.setItem('to_transactions', JSON.stringify(initialTxn));
+      }
     } catch { /* ignore */ }
   }, []);
 
-  // Persist to localStorage on every change
+  // Persist cart to localStorage
   useEffect(() => {
     try {
       localStorage.setItem('to_cart', JSON.stringify(state.cart));
     } catch { /* ignore */ }
   }, [state.cart]);
 
+  // Persist coins to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('to_wishlist', JSON.stringify(state.wishlist));
+      localStorage.setItem('to_coins', String(coins));
     } catch { /* ignore */ }
-  }, [state.wishlist]);
+  }, [coins]);
+
+  // Persist transactions to localStorage
+  useEffect(() => {
+    try {
+      if (transactions.length) {
+        localStorage.setItem('to_transactions', JSON.stringify(transactions));
+      }
+    } catch { /* ignore */ }
+  }, [transactions]);
+
+  // ── Coin helpers with transaction logging ────────────────────────
+  const addCoins = useCallback((amount = COINS_PER_ORDER, orderId = null) => {
+    setCoins((prev) => prev + amount);
+    const assignedId = orderId || `TO-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newTxn = {
+      id: `TXN-${Date.now()}`,
+      orderId: assignedId,
+      title: orderId ? `Order #${assignedId} Delivered` : 'Delivered Order Reward',
+      desc: '100 Original Coins credited upon delivery',
+      type: 'credit',
+      amount,
+      status: 'Delivered',
+      date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+    };
+    setTransactions((prev) => [newTxn, ...prev]);
+  }, []);
+
+  const redeemCoins = useCallback((orderId = null) => {
+    if (coins >= REDEEM_THRESHOLD) {
+      setCoins((prev) => Math.max(0, prev - REDEEM_THRESHOLD));
+      setIsCoinsRedeemed(true);
+      const assignedId = orderId || `TO-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newTxn = {
+        id: `TXN-${Date.now()}-RED`,
+        orderId: assignedId,
+        title: `Voucher Redeemed (#${assignedId})`,
+        desc: '5,000 Original Coins redeemed for ₹500 discount',
+        type: 'debit',
+        amount: -REDEEM_THRESHOLD,
+        status: 'Redeemed',
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      };
+      setTransactions((prev) => [newTxn, ...prev]);
+      return true;
+    }
+    return false;
+  }, [coins]);
+
+  const toggleRedeemCoins = useCallback(() => {
+    if (coins >= REDEEM_THRESHOLD) {
+      setIsCoinsRedeemed((prev) => !prev);
+    }
+  }, [coins]);
 
   // ── Cart helpers ────────────────────────────────────────────────
   const addToCart = useCallback((item) => dispatch({ type: 'CART_ADD', item }), []);
@@ -105,33 +169,38 @@ export function ShopProvider({ children }) {
   const updateCartQty = useCallback((id, qty) => dispatch({ type: 'CART_UPDATE_QTY', id, qty }), []);
   const clearCart = useCallback(() => dispatch({ type: 'CART_CLEAR' }), []);
 
-  // ── Wishlist helpers ────────────────────────────────────────────
-  const toggleWishlist = useCallback((product) => dispatch({ type: 'WISH_TOGGLE', product }), []);
-  const removeFromWishlist = useCallback((id) => dispatch({ type: 'WISH_REMOVE', id }), []);
-  const clearWishlist = useCallback(() => dispatch({ type: 'WISH_CLEAR' }), []);
-  const isWishlisted = useCallback((id) => state.wishlist.some((w) => w.id === id), [state.wishlist]);
-
   // ── Computed ────────────────────────────────────────────────────
   const cartCount = state.cart.reduce((sum, c) => sum + c.quantity, 0);
   const cartTotal = state.cart.reduce((sum, c) => sum + c.price * c.quantity, 0);
-  const wishlistCount = state.wishlist.length;
+  const coinsValue = Math.round(coins * 0.1); // 100 coins = Rs.10
+  const canRedeemCoins = coins >= REDEEM_THRESHOLD;
+  const coinsNeededForRedeem = Math.max(0, REDEEM_THRESHOLD - coins);
+  const progressPercent = Math.min(100, Math.round((coins / REDEEM_THRESHOLD) * 100));
 
   return (
     <ShopContext.Provider
       value={{
         cart: state.cart,
-        wishlist: state.wishlist,
         cartCount,
         cartTotal,
-        wishlistCount,
         addToCart,
         removeFromCart,
         updateCartQty,
         clearCart,
-        toggleWishlist,
-        removeFromWishlist,
-        clearWishlist,
-        isWishlisted,
+        // Original Coins wallet & transactions
+        coins,
+        coinsValue,
+        canRedeemCoins,
+        coinsNeededForRedeem,
+        progressPercent,
+        transactions,
+        addCoins,
+        redeemCoins,
+        isCoinsRedeemed,
+        setIsCoinsRedeemed,
+        toggleRedeemCoins,
+        isCoinsModalOpen,
+        setIsCoinsModalOpen,
       }}
     >
       {children}
@@ -144,4 +213,3 @@ export function useShop() {
   if (!ctx) throw new Error('useShop must be used inside ShopProvider');
   return ctx;
 }
-

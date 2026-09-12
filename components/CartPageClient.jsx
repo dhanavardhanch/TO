@@ -6,7 +6,7 @@ import Nav from './Nav';
 import Footer from './Footer';
 
 export default function CartPageClient() {
-  const { cart, removeFromCart, updateCartQty, cartTotal, cartCount } = useShop();
+  const { cart, removeFromCart, updateCartQty, cartTotal, cartCount, coins } = useShop();
 
   const savings = cart.reduce((sum, c) => sum + (c.mrp - c.price) * c.quantity, 0);
   const deliveryCharge = cartTotal >= 599 ? 0 : 60;
@@ -18,16 +18,31 @@ export default function CartPageClient() {
         <Nav />
         <main className="cart-page">
           <div className="cart-empty-state">
-            <div className="cart-empty-icon">
-              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-              </svg>
+            <div className="cart-empty-video-wrap">
+              <video
+                src="/assets/empty_cart_animation.webm"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="cart-empty-video"
+              >
+                <source src="/assets/empty_cart_animation.webm" type="video/webm" />
+              </video>
             </div>
-            <h1 className="cart-empty-title">Your cart is empty</h1>
-            <p className="cart-empty-sub">Looks like you haven't added any cashews yet.</p>
-            <Link href="/products" className="btn-primary cart-shop-btn">Browse Products</Link>
+            <h1 className="cart-empty-title">Your Cart is Empty</h1>
+            <p className="cart-empty-sub">
+              Looks like you haven&apos;t added any handcrafted Palasa cashews to your cart yet.
+            </p>
+            <div className="cart-empty-actions">
+              <Link href="/products" className="btn-primary cart-shop-btn">
+                Browse Products
+              </Link>
+              <Link href="/" className="btn-secondary cart-home-btn">
+                Return Home
+              </Link>
+            </div>
           </div>
         </main>
         <Footer />
@@ -141,6 +156,29 @@ export default function CartPageClient() {
                     <span>Total</span>
                     <span>₹{finalTotal.toLocaleString('en-IN')}</span>
                   </div>
+                </div>
+
+                {/* Original Coins Earn Notice in Cart */}
+                <div className="cart-coins-reward-banner">
+                  <div className="cart-coins-left">
+                    <div className="cart-coin-icon-box">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                        <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
+                        <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+                      </svg>
+                    </div>
+                    <div className="cart-coin-texts">
+                      <span className="cart-coin-earn-title">Earn 100 Original Coins</span>
+                      <span className="cart-coin-earn-desc">₹10 value credited on delivery</span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/wallet"
+                    className="cart-coin-wallet-btn"
+                  >
+                    Wallet ({coins.toLocaleString('en-IN')})
+                  </Link>
                 </div>
 
                 <Link href="/checkout" className="btn-buy-now cart-checkout-btn">

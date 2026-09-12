@@ -335,7 +335,7 @@ export default function ProductsPageClient() {
         PRODUCTS_DATA.forEach((product) => {
           const activeGrade = selectedCustomGrades[product.id] || product.customGrades?.[0];
           const opts = product.hasGradeCustomization
-            ? product.gradeOptions[activeGrade]
+            ? product.gradeOptions?.[activeGrade] || product.options
             : product.options;
 
           const matchIdx = opts.findIndex((opt) =>
@@ -355,16 +355,16 @@ export default function ProductsPageClient() {
       ? selectedCustomGrades[product.id] || product.customGrades[0]
       : null;
     const currentOptions = product.hasGradeCustomization
-      ? product.gradeOptions[activeGrade] || product.options
+      ? product.gradeOptions?.[activeGrade] || product.options
       : product.options;
 
     let idx = selectedSizes[product.id];
-    // If active size filter exists and this card has a matching option, default to it
+    // If active size filter exists and this card has a matching option, use that option
     if (selectedSizeFilter) {
       const matchIdx = currentOptions.findIndex((opt) =>
         opt.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
       );
-      if (matchIdx !== -1 && (idx === undefined || !currentOptions[idx]?.size.toLowerCase().includes(selectedSizeFilter.toLowerCase()))) {
+      if (matchIdx !== -1) {
         idx = matchIdx;
       }
     }
@@ -379,7 +379,7 @@ export default function ProductsPageClient() {
     };
   };
 
-  const { addToCart: ctxAddToCart, toggleWishlist, isWishlisted } = useShop();
+  const { addToCart: ctxAddToCart } = useShop();
 
   // Add standard product to cart (also syncs to global context)
   const addToCart = (product) => {
@@ -569,7 +569,11 @@ export default function ProductsPageClient() {
 
       // Package Size filter (100g, 200g, 250g, 500g)
       if (selectedSizeFilter) {
-        const hasSize = item.options.some((opt) =>
+        const activeGrade = selectedCustomGrades[item.id] || item.customGrades?.[0];
+        const currentOpts = item.hasGradeCustomization && item.gradeOptions && activeGrade
+          ? item.gradeOptions[activeGrade] || item.options
+          : item.options;
+        const hasSize = currentOpts.some((opt) =>
           opt.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
         );
         if (!hasSize) return false;
@@ -577,7 +581,14 @@ export default function ProductsPageClient() {
 
       // Price filter
       if (selectedPriceFilter) {
-        const basePrice = item.options[0].price;
+        const activeGrade = selectedCustomGrades[item.id] || item.customGrades?.[0];
+        const currentOpts = item.hasGradeCustomization && item.gradeOptions && activeGrade
+          ? item.gradeOptions[activeGrade] || item.options
+          : item.options;
+        const opt = selectedSizeFilter
+          ? currentOpts.find((o) => o.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())) || currentOpts[0]
+          : currentOpts[0];
+        const basePrice = opt.price;
         if (selectedPriceFilter === 'under500' && basePrice >= 500) return false;
         if (
           selectedPriceFilter === '500to1000' &&
@@ -589,11 +600,25 @@ export default function ProductsPageClient() {
 
       return true;
     }).sort((a, b) => {
+      const getPrice = (item) => {
+        const activeGrade = selectedCustomGrades[item.id] || item.customGrades?.[0];
+        const opts = item.hasGradeCustomization && item.gradeOptions && activeGrade
+          ? item.gradeOptions[activeGrade] || item.options
+          : item.options;
+        if (selectedSizeFilter) {
+          const matchOpt = opts.find((o) =>
+            o.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
+          );
+          if (matchOpt) return matchOpt.price;
+        }
+        return opts[0]?.price ?? 0;
+      };
+
       if (sortBy === 'price-low') {
-        return a.options[0].price - b.options[0].price;
+        return getPrice(a) - getPrice(b);
       }
       if (sortBy === 'price-high') {
-        return b.options[0].price - a.options[0].price;
+        return getPrice(b) - getPrice(a);
       }
       return 0; // default featured order
     });
@@ -604,6 +629,7 @@ export default function ProductsPageClient() {
     selectedSizeFilter,
     selectedPriceFilter,
     sortBy,
+    selectedCustomGrades,
   ]);
 
   const isFilterActive =
@@ -927,8 +953,17 @@ export default function ProductsPageClient() {
                     const activeGrade = optData.selectedGrade;
 
                     const currentOptions = product.hasGradeCustomization
-                      ? product.gradeOptions[activeGrade] || product.options
+                      ? product.gradeOptions?.[activeGrade] || product.options
                       : product.options;
+
+                    // If a packaging size filter is active (e.g. 250g), show ONLY that size on the card.
+                    // If no filter is active, show both/all available sizes.
+                    const matchingOptions = selectedSizeFilter
+                      ? currentOptions.filter((opt) =>
+                          opt.size.toLowerCase().includes(selectedSizeFilter.toLowerCase())
+                        )
+                      : currentOptions;
+                    const displayedOptions = matchingOptions.length > 0 ? matchingOptions : currentOptions;
 
                     return (
                       <article key={product.id} className="shop-product-card">
@@ -953,24 +988,6 @@ export default function ProductsPageClient() {
                           </div>
                         </Link>
 
-                        {/* Wishlist Heart */}
-                        <button
-                          type="button"
-                          className={`card-wishlist-btn ${isWishlisted(product.id) ? 'wishlisted' : ''}`}
-                          onClick={() => toggleWishlist({
-                            id: product.id,
-                            name: product.name,
-                            grade: product.grade,
-                            image: product.image,
-                            desc: product.desc,
-                            options: product.options,
-                          })}
-                          aria-label={isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill={isWishlisted(product.id) ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                          </svg>
-                        </button>
 
                         {/* Card Content */}
                         <div className="shop-card-body">
@@ -1006,30 +1023,26 @@ export default function ProductsPageClient() {
                             <div className="shop-grade-custom-spacer" aria-hidden="true" />
                           )}
 
-                          {/* Size Selection Pills */}
-                          {currentOptions.length > 1 ? (
-                            <div className="shop-size-selector">
-                              <span className="size-selector-label">Select Weight:</span>
-                              <div className="size-pills">
-                                {currentOptions.map((opt, idx) => (
+                          {/* Size Selection Pills: Shows only filtered size if filter is active; shows all sizes if no filter */}
+                          <div className="shop-size-selector">
+                            <span className="size-selector-label">Select Weight:</span>
+                            <div className="size-pills">
+                              {displayedOptions.map((opt) => {
+                                const originalIdx = currentOptions.findIndex((o) => o.size === opt.size);
+                                const isSelected = activeOpt.size === opt.size;
+                                return (
                                   <button
                                     key={opt.size}
                                     type="button"
-                                    className={`size-pill ${
-                                      activeOptIdx === idx ? 'active' : ''
-                                    }`}
-                                    onClick={() => handleSizeChange(product.id, idx)}
+                                    className={`size-pill ${isSelected ? 'active' : ''}`}
+                                    onClick={() => handleSizeChange(product.id, originalIdx >= 0 ? originalIdx : 0)}
                                   >
                                     {opt.size}
                                   </button>
-                                ))}
-                              </div>
+                                );
+                              })}
                             </div>
-                          ) : (
-                            <div className="shop-size-selector single-size">
-                              <span className="single-size-tag">{activeOpt.size}</span>
-                            </div>
-                          )}
+                          </div>
 
                           {/* Price Display */}
                           <div className="shop-card-price-row">
@@ -1040,6 +1053,10 @@ export default function ProductsPageClient() {
                               )}
                             </div>
                             <span className="tax-inclusive-tag">Tax incl.</span>
+                          </div>
+
+                          <div className="product-coins-perk shop-card-coins-perk">
+                            <span className="coins-perk-text">🪙 Earn <strong>100 Coins</strong> (₹10 value)</span>
                           </div>
 
                           {/* Action Buttons */}

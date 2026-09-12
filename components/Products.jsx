@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -7,23 +7,23 @@ import { useShop } from '../context/ShopContext';
 export default function Products() {
   const [selectedSizes, setSelectedSizes] = useState({ 0: 0, 1: 0, 2: 0 });
   const [toast, setToast] = useState('');
-  const { addToCart, toggleWishlist, isWishlisted } = useShop();
+  const { addToCart } = useShop();
 
   const featuredProducts = [
     {
-      id: 'w180',
-      grade: 'Grade W180 Â· Jumbo King',
-      name: 'The Original W180',
-      desc: 'The rarest and largest king cashew of Palasa. Renowned for its rich ivory density, creamy mouthfeel, and naturally sweet finish.',
+      id: 'w320',
+      grade: 'Grade W320 · Classic Benchmark',
+      name: 'The Original W320',
+      desc: 'The traditional standard of Palasa harvests. Pristine whole kernels, perfectly balanced for everyday nourishment and gifting.',
       image: '/assets/pouch.jpeg',
       options: [
-        { size: '250g', price: 460, mrp: 520 },
-        { size: '500g', price: 890, mrp: 999 },
+        { size: '250g', price: 320, mrp: 380 },
+        { size: '500g', price: 620, mrp: 720 },
       ],
     },
     {
       id: 'w240',
-      grade: 'Grade W240 Â· Standard Jumbo',
+      grade: 'Grade W240 · Standard Jumbo',
       name: 'The Original W240',
       desc: 'Generously sized whole cashews offering the quintessential crisp snap and delicate buttery character of coastal laterite soil.',
       image: '/assets/pouch.jpeg',
@@ -33,14 +33,14 @@ export default function Products() {
       ],
     },
     {
-      id: 'w320',
-      grade: 'Grade W320 Â· Classic Benchmark',
-      name: 'The Original W320',
-      desc: 'The traditional standard of Palasa harvests. Pristine whole kernels, perfectly balanced for everyday nourishment and gifting.',
+      id: 'w180',
+      grade: 'Grade W180 · Jumbo King',
+      name: 'The Original W180',
+      desc: 'The rarest and largest king cashew of Palasa. Renowned for its rich ivory density, creamy mouthfeel, and naturally sweet finish.',
       image: '/assets/pouch.jpeg',
       options: [
-        { size: '250g', price: 320, mrp: 380 },
-        { size: '500g', price: 620, mrp: 720 },
+        { size: '250g', price: 460, mrp: 520 },
+        { size: '500g', price: 890, mrp: 999 },
       ],
     },
   ];
@@ -69,24 +69,11 @@ export default function Products() {
   const handleBuyNow = (product, cardIdx) => {
     const optIdx = selectedSizes[cardIdx] ?? 0;
     const opt = product.options[optIdx];
-    const text = `Hi The Original, I would like to order:\n*${product.name}* (${opt.size}) | â‚¹${opt.price}\nPlease confirm dispatch details.`;
+    const text = `Hi The Original, I would like to order:\n*${product.name}* (${opt.size}) | ₹${opt.price}\nPlease confirm dispatch details.`;
     const url = `https://wa.me/919100267404?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
 
-  const handleToggleWishlist = (product) => {
-    toggleWishlist({
-      id: product.id,
-      name: product.name,
-      grade: product.grade,
-      image: product.image,
-      desc: product.desc,
-      options: product.options,
-    });
-    const msg = isWishlisted(product.id) ? `Removed from wishlist` : `Added to wishlist!`;
-    setToast(msg);
-    setTimeout(() => setToast(''), 2500);
-  };
 
   return (
     <section className="section products" id="products">
@@ -118,7 +105,7 @@ export default function Products() {
 
           <div className="products-header-callout">
             <span className="callout-script">From the Cashew Capital</span>
-            <span className="callout-sub">â€” Palasa â€”</span>
+            <span className="callout-sub">Palasa</span>
             <div className="callout-line"></div>
           </div>
         </div>
@@ -128,7 +115,6 @@ export default function Products() {
           {featuredProducts.map((p, cardIdx) => {
             const activeOptIdx = selectedSizes[cardIdx] ?? 0;
             const activeOpt = p.options[activeOptIdx];
-            const wishlisted = isWishlisted(p.id);
 
             return (
               <article key={p.name} className="product-card">
@@ -139,7 +125,7 @@ export default function Products() {
                 >
                   <div className="product-image-wrap">
                     <span className="product-grade-badge">
-                      {p.grade.split('Â·')[0].trim().toUpperCase()}
+                      {p.grade.split(/[·•|]|Â·/)[0].trim().toUpperCase()}
                     </span>
                     <img
                       src={p.image}
@@ -152,19 +138,6 @@ export default function Products() {
                   </div>
                 </Link>
 
-                {/* Wishlist Heart */}
-                <button
-                  type="button"
-                  className={`card-wishlist-btn ${wishlisted ? 'wishlisted' : ''}`}
-                  onClick={() => handleToggleWishlist(p)}
-                  aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                  title={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill={wishlisted ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                </button>
-
                 <div className="product-info">
                   <h3 className="product-title">
                     <Link href={`/products/${p.id}`} className="product-title-link">
@@ -175,8 +148,8 @@ export default function Products() {
 
                   <div className="product-price-row">
                     <div className="price-stack">
-                      <span className="current-price">â‚¹{activeOpt.price}</span>
-                      <span className="mrp-price">â‚¹{activeOpt.mrp}</span>
+                      <span className="current-price">₹{activeOpt.price}</span>
+                      <span className="mrp-price">₹{activeOpt.mrp}</span>
                     </div>
                     <span className="tax-inclusive-tag">Taxes included</span>
                   </div>
@@ -195,6 +168,15 @@ export default function Products() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="product-coins-perk">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                      <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
+                      <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+                    </svg>
+                    <span className="coins-perk-text">Earn <strong>100 Original Coins</strong> (₹10 value)</span>
                   </div>
 
                   <div className="product-actions-grid">
@@ -242,7 +224,7 @@ export default function Products() {
 
       {toast && (
         <div className="shop-toast" role="status">
-          <span className="toast-check">âœ“</span>
+          <span className="toast-check">✓</span>
           <span>{toast}</span>
         </div>
       )}
