@@ -10,7 +10,7 @@ export default function Footer() {
 
   const productLinks = [
     { label: 'W180 Jumbo King', href: '/products' },
-    { label: 'W220 Selected Jumbo', href: '/products' },
+    { label: 'W240 Standard Jumbo', href: '/products' },
     { label: 'W320 Classic Benchmark', href: '/products' },
     { label: 'Palasa Skin Cashews', href: '/products' },
     { label: 'JH Split Cashews', href: '/products' },

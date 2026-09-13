@@ -2,29 +2,38 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useShop } from '../context/ShopContext';
+import { useAuth } from '../context/AuthContext';
 
-const LINKS = [
-  { href: '/#home', label: 'Home' },
-  { href: '/about', label: 'About' },
+const LEFT_LINKS = [
   { href: '/products', label: 'Products' },
   { href: '/gifting', label: 'Gifting' },
+  { href: '/about', label: 'About' },
+];
+
+const RIGHT_LINKS = [
   { href: '/contact', label: 'Contact' },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { cartCount, coins } = useShop();
+  const { cartCount, openCartDrawer } = useShop();
+  const { isLoggedIn, user, coins, openLoginModal, logout } = useAuth();
+  const pathname = usePathname();
+
+  // Only home page gets the full-transparent treatment
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     document.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => document.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') setMenuOpen(false);
@@ -33,11 +42,28 @@ export default function Nav() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Home page: transparent until scroll/hover/menu
+  // Other pages: always active (frosted, dark text)
+  const isActive = !isHomePage || scrolled || hovered || menuOpen;
+
   return (
     <>
-      <div className={`nav-wrap ${scrolled ? 'scrolled' : ''}`}>
-        <nav className="nav">
-          {/* Mobile Left 3-Lines Hamburger Menu Button */}
+      <header
+        className={`nav-header ${isActive ? 'nav-active' : ''}`}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div className="nav-inner">
+          {/* ── LEFT: Desktop nav links ── */}
+          <nav className="nav-left-links" aria-label="Primary navigation">
+            {LEFT_LINKS.map((l) => (
+              <a key={l.href} href={l.href} className="nav-link">
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* ── MOBILE: Hamburger toggle ── */}
           <button
             type="button"
             className={`mobile-nav-toggle ${menuOpen ? 'open' : ''}`}
@@ -45,63 +71,82 @@ export default function Nav() {
             aria-label="Toggle navigation menu"
             aria-expanded={menuOpen}
           >
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
           </button>
 
-          {/* Brand: TO Emblem + Text (Centered on mobile) */}
-          <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
-            <div className="brand-mark">TO</div>
-            <span className="brand-name">The Original</span>
+          {/* ── CENTER: Stacked Logo ── */}
+          <Link href="/" className="nav-brand-center" onClick={() => setMenuOpen(false)}>
+            <div className="nav-brand-mark">TO</div>
+            <span className="nav-brand-text">The Original</span>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <div className="nav-links">
-            {LINKS.map((l) => (
-              <a key={l.href} href={l.href}>
+          {/* ── RIGHT: actions ── */}
+          <div className="nav-right-actions">
+            {/* Desktop: extra right links */}
+            {RIGHT_LINKS.map((l) => (
+              <a key={l.href} href={l.href} className="nav-link nav-link-right">
                 {l.label}
               </a>
             ))}
-          </div>
 
-          {/* Right actions: Wallet + Cart + Shop CTA */}
-          <div className="nav-right-actions">
-            {/* Desktop Real SVG Wallet Icon Button (Hidden on Mobile) */}
-            <Link
-              href="/wallet"
-              className="nav-icon-btn nav-wallet-btn"
-              aria-label="Original Coins Wallet"
-              title="Original Coins Wallet"
-              onClick={() => setMenuOpen(false)}
+            {/* Profile / Sign In Icon */}
+            {isLoggedIn ? (
+              <Link
+                href="/profile"
+                className="nav-icon-btn nav-profile-btn"
+                aria-label="Profile"
+                title={user?.name || 'My Profile'}
+                onClick={() => setMenuOpen(false)}
+              >
+                {/* Filled person icon */}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+                {coins > 0 && (
+                  <span className="nav-badge nav-coins-badge">{coins}</span>
+                )}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="nav-icon-btn nav-profile-btn"
+                aria-label="Sign In"
+                title="Sign In"
+                onClick={() => { setMenuOpen(false); openLoginModal(); }}
+              >
+                {/* Outlined person icon (not logged in) */}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
+            )}
+
+            {/* Cart Icon — bold shopping bag */}
+            <button
+              type="button"
+              className="nav-icon-btn nav-cart-btn"
+              aria-label={`Shopping cart${cartCount > 0 ? `, ${cartCount} items` : ''}`}
+              onClick={() => {
+                setMenuOpen(false);
+                openCartDrawer();
+              }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
-                <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
-                <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
-              </svg>
-              {coins > 0 && <span className="nav-badge wallet-badge">{coins}</span>}
-            </Link>
-
-            {/* Cart Icon (with notification counter badge) */}
-            <Link href="/cart" className="nav-icon-btn nav-cart-btn" aria-label="Shopping cart" onClick={() => setMenuOpen(false)}>
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              {/* Bold shopping bag icon */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
               {cartCount > 0 && <span className="nav-badge cart-badge">{cartCount}</span>}
-            </Link>
-
-            {/* Desktop Shop CTA button */}
-            <a href="/products" className="nav-cta">
-              Shop now
-            </a>
+            </button>
           </div>
-        </nav>
-      </div>
+        </div>
+      </header>
 
-      {/* Backdrop overlay for mobile menu */}
+      {/* Mobile backdrop */}
       {menuOpen && (
         <div
           className="mobile-menu-backdrop"
@@ -110,10 +155,10 @@ export default function Nav() {
         />
       )}
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile slide-down menu */}
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-nav">
-          {LINKS.map((l) => (
+          {[...LEFT_LINKS, ...RIGHT_LINKS].map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -122,7 +167,7 @@ export default function Nav() {
             >
               <span>{l.label}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </a>
           ))}
@@ -131,33 +176,51 @@ export default function Nav() {
         <div className="mobile-menu-divider" />
 
         <div className="mobile-menu-actions">
-          {/* Mobile Wallet Item (Inside Menu Only) */}
-          <Link
-            href="/wallet"
-            className="mobile-menu-wallet-item"
-            onClick={() => setMenuOpen(false)}
-          >
-            <div className="mobile-wallet-left">
-              <div className="mobile-wallet-icon-box">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
-                  <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
-                  <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/profile"
+                className="mobile-menu-wallet-item"
+                onClick={() => setMenuOpen(false)}
+              >
+                <div className="mobile-wallet-left">
+                  <div className="mobile-wallet-icon-box">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                    </svg>
+                  </div>
+                  <div className="mobile-wallet-info">
+                    <span className="mobile-wallet-name">{user?.name || 'My Profile'}</span>
+                    <span className="mobile-wallet-balance">
+                      {coins} Original Coins · ₹{Math.round(coins * 0.1)} Value
+                    </span>
+                  </div>
+                </div>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
                 </svg>
-              </div>
-              <div className="mobile-wallet-info">
-                <span className="mobile-wallet-name">Original Coins</span>
-                <span className="mobile-wallet-balance">{coins.toLocaleString('en-IN')} Coins &bull; ₹{Math.round(coins * 0.1)} Value</span>
-              </div>
-            </div>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </Link>
+              </Link>
+              <button
+                type="button"
+                className="mobile-menu-signout-btn"
+                onClick={() => { setMenuOpen(false); logout(); }}
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="mobile-menu-cta-btn"
+              onClick={() => { setMenuOpen(false); openLoginModal(); }}
+            >
+              Sign In / Sign Up
+            </button>
+          )}
 
           <Link
             href="/products"
-            className="mobile-menu-cta-btn"
+            className="mobile-menu-shop-btn"
             onClick={() => setMenuOpen(false)}
           >
             Shop All Cashews

@@ -2,6 +2,9 @@ import './globals.css';
 
 import ScrollRevealProvider from '../components/ScrollRevealProvider';
 import { ShopProvider } from '../context/ShopContext';
+import { AuthProvider } from '../context/AuthContext';
+import GlobalCartDrawer from '../components/GlobalCartDrawer';
+import LoginModal from '../components/LoginModal';
 
 export const metadata = {
   title: 'The Original | From the Cashew Capital, Palasa',
@@ -25,9 +28,15 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <ShopProvider>
-          <ScrollRevealProvider>{children}</ScrollRevealProvider>
-        </ShopProvider>
+        <AuthProvider>
+          <ShopProvider>
+            <ScrollRevealProvider>
+              {children}
+              <GlobalCartDrawer />
+              <LoginModal />
+            </ScrollRevealProvider>
+          </ShopProvider>
+        </AuthProvider>
       </body>
     </html>
   );

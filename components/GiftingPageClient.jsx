@@ -30,8 +30,8 @@ export default function GiftingPageClient() {
       id: 'executive-reserve',
       name: 'The Executive Reserve Caddy',
       tag: 'Corporate Appreciation & Milestones',
-      desc: 'Selected Jumbo W220 cashews paired with our 5-in-1 Royal Mix Dry Fruits (Almonds, Cashews, Pistachios, Raisins, Walnuts). Minimalist matte sleeve with bespoke corporate logo branding.',
-      contents: ['The Original W220 Selected Jumbo (250g)', 'Royal Mix Dry Fruits (250g)', 'Custom Company Logo Sleeve'],
+      desc: 'Standard Jumbo W240 cashews paired with our 5-in-1 Royal Mix Dry Fruits (Almonds, Cashews, Pistachios, Raisins, Walnuts). Minimalist matte sleeve with bespoke corporate logo branding.',
+      contents: ['The Original W240 Standard Jumbo (250g)', 'Royal Mix Dry Fruits (250g)', 'Custom Company Logo Sleeve'],
       badge: 'Bestseller Corporate',
     },
     {
@@ -379,7 +379,7 @@ export default function GiftingPageClient() {
                   <label>Specific Preferences &amp; Timeline</label>
                   <textarea
                     rows={4}
-                    placeholder="Preferred cashew grades (W180, W220, Skin Cashews, Chocolates), delivery date, budget per box, etc..."
+                    placeholder="Preferred cashew grades (W180, W240, Skin Cashews, Chocolates), delivery date, budget per box, etc..."
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                   ></textarea>

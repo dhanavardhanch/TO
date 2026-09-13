@@ -23,7 +23,7 @@ export default function CheckoutPageClient() {
   const [submitted, setSubmitted] = useState(false);
   const [earnedSummary, setEarnedSummary] = useState(null);
 
-  const deliveryCharge = cartTotal >= 599 ? 0 : 60;
+  const deliveryCharge = 70;
   const coinsDiscount = isCoinsRedeemed && canRedeemCoins ? 500 : 0;
   const finalTotal = Math.max(0, cartTotal + deliveryCharge - coinsDiscount);
 
@@ -228,8 +228,8 @@ export default function CheckoutPageClient() {
                 <div className="cart-summary-rows">
                   <div className="cart-summary-row"><span>Subtotal</span><span>Rs.{cartTotal.toLocaleString('en-IN')}</span></div>
                   <div className="cart-summary-row">
-                    <span>Delivery</span>
-                    <span className={deliveryCharge === 0 ? 'free-delivery' : ''}>{deliveryCharge === 0 ? 'Free' : `Rs.${deliveryCharge}`}</span>
+                    <span>Standard Express Delivery</span>
+                    <span>Rs.{deliveryCharge}</span>
                   </div>
                   {coinsDiscount > 0 && (
                     <div className="cart-summary-row coins-discount">

@@ -235,7 +235,7 @@ export default function ContactPageClient() {
                     <textarea
                       id="contact-message"
                       rows={5}
-                      placeholder="Tell us about the grades you need (W180, W220, W320, Skin Cashews, JH splits, or custom gifting quantities)..."
+                      placeholder="Tell us about the grades you need (W180, W240, W320, Skin Cashews, JH splits, or custom gifting quantities)..."
                       value={formData.message}
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })

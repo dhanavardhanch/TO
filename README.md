@@ -28,7 +28,7 @@ We are proud **selective relabellers and curators** rather than a single-factory
 
 ### Whole & Split Calibers
 - **Grade W180 (Jumbo King)**: The rarest and largest king cashew of Palasa. Rich ivory density and creamy mouthfeel. *(250g, 500g)*
-- **Grade W220 (Selected Jumbo)**: Generously sized whole cashews with classic snap and coastal sweetness. *(250g, 500g)*
+- **Grade W240 (Standard Jumbo)**: Generously sized whole cashews with classic snap and coastal sweetness. *(250g, 500g)*
 - **Grade W320 (Classic Benchmark)**: The timeless standard of Palasa harvests for everyday nourishment. *(250g, 500g)*
 - **Palasa Raw Cashew Nuts / Skin Cashews (Pottu Pappu)**: Authentic unpeeled roasted cashews with protective skins intact. Nutty depth, extra crunch, and high natural fiber. *(250g, 500g)*
 - **Grade JH & SJH (Clean Splits)**: Pristine split halves and small kernels for traditional sweets, curries, and culinary garnishing. *(250g, 500g)*
@@ -39,14 +39,14 @@ We are proud **selective relabellers and curators** rather than a single-factory
 - **Gourmet Flavoured Cashew (Coming Soon)**: Peri Peri, Himalayan Pink Salt & Cracked Pepper infusions. *(100g, 200g)*
 
 ### Curated Value Combos (500g & 1kg)
-- W320 + W220 Combo
+- W320 + W240 Combo
 - W320 + W180 Combo
-- W220 + W180 Combo
+- W240 + W180 Combo
 - W320 + Palasa Raw Skin Cashews Combo
 - W180 + Palasa Raw Skin Cashews Combo
-- W220 + Palasa Raw Skin Cashews Combo
+- W240 + Palasa Raw Skin Cashews Combo
 - W320 + JH/SJH Split Combo
-- W220 + JH/SJH Split Combo
+- W240 + JH/SJH Split Combo
 - W180 + JH/SJH Split Combo
 
 ---

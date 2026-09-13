@@ -281,9 +281,8 @@ export default function ProductsPageClient() {
     'mix-dry-fruit': 'W320',
   });
 
-  // Cart state: [ { id, name, size, price, quantity, image, isCustomCombo?, comboItems? } ]
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  // Cart & Drawer from global context (ensures synchronized count and price)
+  const { cart, cartCount, cartTotal, addToCart: ctxAddToCart, openCartDrawer } = useShop();
   const [toastMessage, setToastMessage] = useState('');
 
   // Quick Order Modal (Buy Now)
@@ -379,9 +378,7 @@ export default function ProductsPageClient() {
     };
   };
 
-  const { addToCart: ctxAddToCart } = useShop();
-
-  // Add standard product to cart (also syncs to global context)
+  // Add standard product to cart (dispatches directly to global ShopContext)
   const addToCart = (product) => {
     const opt = getProductOption(product);
     const displayName = opt.selectedGrade
@@ -389,28 +386,6 @@ export default function ProductsPageClient() {
       : product.name;
     const cartItemId = `${product.id}-${opt.size}-${opt.selectedGrade || 'default'}`;
 
-    setCart((prev) => {
-      const existingIdx = prev.findIndex(
-        (item) => item.id === product.id && item.size === opt.size && item.name === displayName
-      );
-      if (existingIdx > -1) {
-        const next = [...prev];
-        next[existingIdx].quantity += 1;
-        return next;
-      }
-      return [
-        ...prev,
-        {
-          id: product.id,
-          name: displayName,
-          size: opt.size,
-          price: opt.price,
-          quantity: 1,
-          image: product.image,
-        },
-      ];
-    });
-    // Sync to global context so cart page shows items
     ctxAddToCart({
       id: cartItemId,
       productId: product.id,
@@ -440,27 +415,6 @@ export default function ProductsPageClient() {
     });
     setOrderModalOpen(true);
   };
-
-  const updateCartQty = (idx, delta) => {
-    setCart((prev) => {
-      const next = [...prev];
-      const newQty = next[idx].quantity + delta;
-      if (newQty <= 0) {
-        next.splice(idx, 1);
-      } else {
-        next[idx].quantity = newQty;
-      }
-      return next;
-    });
-  };
-
-  const cartTotal = useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  }, [cart]);
-
-  const cartItemCount = useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cart]);
 
   // Combo Builder Handlers with Real-Time Weight Switcher
   const toggleComboItem = (id) => {
@@ -520,11 +474,15 @@ export default function ProductsPageClient() {
       comboItems: itemsBreakup,
     };
 
-    setCart((prev) => [...prev, newComboBundle]);
+    ctxAddToCart({
+      ...newComboBundle,
+      productId: 'custom-combo',
+      mrp: comboRunningTotal + 150,
+    });
     setComboBuilderOpen(false);
     setSelectedComboState({});
     showToast(`Added Custom Combo (${checkedComboEntries.length} items) to bag`);
-    setCartOpen(true);
+    openCartDrawer();
   };
 
   const handleComboCancel = () => {
@@ -1370,15 +1328,15 @@ export default function ProductsPageClient() {
         </div>
       )}
 
-      {/* Floating Cart Button */}
-      {cartItemCount > 0 && (
+      {/* Floating Cart Button (only appears when items exist in global cart) */}
+      {cartCount > 0 && (
         <button
           type="button"
           className="floating-cart-btn"
-          onClick={() => setCartOpen(true)}
+          onClick={openCartDrawer}
           aria-label="View Cart"
         >
-          <div className="cart-badge-count">{cartItemCount}</div>
+          <div className="cart-badge-count">{cartCount}</div>
           <svg
             width="18"
             height="18"
@@ -1393,129 +1351,8 @@ export default function ProductsPageClient() {
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          <span>₹{cartTotal}</span>
+          <span>₹{cartTotal.toLocaleString('en-IN')}</span>
         </button>
-      )}
-
-      {/* Cart Slide-Over Drawer with Combo Breakup */}
-      {cartOpen && (
-        <div className="cart-drawer-overlay" onClick={() => setCartOpen(false)}>
-          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="cart-drawer-header">
-              <div className="cart-title-wrap">
-                <h3 className="cart-title">Your Harvest Bag</h3>
-                <span className="cart-items-count">({cartItemCount} items)</span>
-              </div>
-              <button
-                type="button"
-                className="cart-close-btn"
-                onClick={() => setCartOpen(false)}
-                aria-label="Close Bag"
-              >
-                &times;
-              </button>
-            </div>
-
-            {cart.length === 0 ? (
-              <div className="cart-empty">
-                <p>Your bag is empty.</p>
-                <button
-                  type="button"
-                  className="btn-buy-now"
-                  onClick={() => setCartOpen(false)}
-                >
-                  Explore products
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items-list">
-                  {cart.map((item, idx) => (
-                    <div key={`${item.id}-${item.size}-${item.name}`} className="cart-item-row-wrapper">
-                      <div className="cart-item-row">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="cart-item-thumb"
-                        />
-                        <div className="cart-item-info">
-                          <h4 className="cart-item-name">{item.name}</h4>
-                          <span className="cart-item-size">{item.size}</span>
-                          <div className="cart-item-price">₹{item.price} each</div>
-                        </div>
-
-                        <div className="cart-qty-controls">
-                          <button
-                            type="button"
-                            className="qty-btn"
-                            onClick={() => updateCartQty(idx, -1)}
-                            aria-label="Decrease quantity"
-                          >
-                            -
-                          </button>
-                          <span className="qty-num">{item.quantity}</span>
-                          <button
-                            type="button"
-                            className="qty-btn"
-                            onClick={() => updateCartQty(idx, 1)}
-                            aria-label="Increase quantity"
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <div className="cart-item-total">
-                          ₹{item.price * item.quantity}
-                        </div>
-                      </div>
-
-                      {/* Breakup of Custom Combo Packup */}
-                      {item.isCustomCombo && item.comboItems && (
-                        <div className="cart-combo-breakdown">
-                          <span className="cart-combo-breakdown-title">Box Contents:</span>
-                          <ul className="cart-combo-items-list">
-                            {item.comboItems.map((ci, cIdx) => (
-                              <li key={cIdx} className="cart-combo-subitem">
-                                <span className="combo-subitem-name">• {ci.name} ({ci.size})</span>
-                                <span className="combo-subitem-price">₹{ci.price}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="cart-drawer-footer">
-                  <div className="cart-subtotal-row">
-                    <span>Subtotal</span>
-                    <span className="cart-subtotal-amount">₹{cartTotal}</span>
-                  </div>
-                  <div className="cart-shipping-note">
-                    ✓ Factory-fresh dispatch directly from Palasa, Andhra Pradesh
-                  </div>
-
-                  <button
-                    type="button"
-                    className="btn-checkout-wa"
-                    onClick={sendWhatsAppCartOrder}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-2.155-.542-1.782-.736-2.915-2.548-3.003-2.667-.088-.119-.716-.953-.716-1.815 0-.862.451-1.286.611-1.46.16-.174.348-.217.464-.217.116 0 .232.002.333.007.106.005.249-.04.39.299.144.348.491 1.199.534 1.286.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.178.182-.077.356.101.174.449.741.963 1.2 1.077.962 1.554 1.127 1.771 1.215.217.088.347.073.477-.073.13-.146.55-1.042.694-1.216.145-.174.29-.145.492-.072.203.072 1.288.608 1.505.717.217.109.362.16.419.261.058.101.058.594-.086.999z" />
-                    </svg>
-                    <span>Order Bag on WhatsApp</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
       )}
 
       {/* Buy Now / Quick Checkout Modal */}

@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 export const metadata = {
   title: 'Shipping Policy | The Original | Palasa Cashews Dispatch & Delivery Timelines',
   description:
-    'Official Shipping Policy of The Original Cashews. Concrete dispatch schedules, delivery timelines by zone across India, flat rates and free shipping threshold, courier partners, tracking, and FSSAI compliance.',
+    'Official Shipping Policy of The Original Cashews. Concrete dispatch schedules, delivery timelines by zone across India, flat express shipping rate, courier partners, tracking, and FSSAI compliance.',
 };
 
 export default function ShippingPolicyPage() {
@@ -16,8 +16,8 @@ export default function ShippingPolicyPage() {
     },
     {
       num: '02',
-      title: 'Shipping Charges & Threshold',
-      desc: 'We provide Complimentary Free Shipping on all orders of ₹999 and above pan-India. For orders below ₹999, a flat shipping and handling charge of ₹70 is applied at checkout. All rates are transparent with no hidden fuel surcharges.',
+      title: 'Shipping Charges & Handling',
+      desc: 'We provide flat-rate express Pan-India shipping at ₹70 on all orders. All rates are transparent with no hidden fuel surcharges or surprise handling fees.',
     },
     {
       num: '03',

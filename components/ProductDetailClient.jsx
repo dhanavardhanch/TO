@@ -3,6 +3,9 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { getRecommendedProducts } from '../data/productsData';
+import FaqSection from './FaqSection';
+import { getProductFaqs } from '../data/faqData';
+import { useShop } from '../context/ShopContext';
 
 // Clean Real SVG Vector Icons (Eliminating AI-generated / emoji look)
 function RealLocationPinIcon({ size = 16, className = '' }) {
@@ -83,8 +86,7 @@ export default function ProductDetailClient({ product }) {
   const [consumptionIndex, setConsumptionIndex] = useState(1); // 0 = 15g (Habit), 1 = 25g (Snack), 2 = 40g (Cooking)
 
   // Cart & Modals
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const { addToCart } = useShop();
   const [toastMessage, setToastMessage] = useState('');
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderForm, setOrderForm] = useState({ name: '', phone: '', address: '', pincode: '' });
@@ -104,6 +106,9 @@ export default function ProductDetailClient({ product }) {
 
   // Recommended Products
   const recommended = useMemo(() => getRecommendedProducts(product.id, 3), [product.id]);
+
+  // Product Specific FAQs
+  const productFaqs = useMemo(() => getProductFaqs(product), [product]);
 
   // Active Option computation
   const activeOptions = useMemo(() => {
@@ -139,7 +144,7 @@ export default function ProductDetailClient({ product }) {
         type: 'success',
         region: 'Andhra Pradesh / Telangana',
         days: '2 – 3 business days',
-        message: 'Direct dispatch from Kasibugga factory. Free shipping on orders above ₹999.',
+        message: 'Direct dispatch from Kasibugga factory. Express Pan-India delivery.',
       });
     }
     // South India
@@ -148,7 +153,7 @@ export default function ProductDetailClient({ product }) {
         type: 'success',
         region: 'South India Express',
         days: '3 – 4 business days',
-        message: 'Direct dispatch via Bluedart / IndiaPost. Free delivery on orders above ₹999.',
+        message: 'Direct dispatch via Bluedart / IndiaPost. Express Pan-India delivery.',
       });
     }
     // Major Metros (Mumbai 40, Delhi 11, Kolkata 70)
@@ -157,7 +162,7 @@ export default function ProductDetailClient({ product }) {
         type: 'success',
         region: 'Metro Air Zone',
         days: '3 – 4 business days',
-        message: 'Air express courier dispatch. Free delivery on orders above ₹999.',
+        message: 'Air express courier dispatch. Express Pan-India delivery.',
       });
     }
     // Rest of India
@@ -166,7 +171,7 @@ export default function ProductDetailClient({ product }) {
         type: 'success',
         region: 'All India Delivery',
         days: '4 – 5 business days',
-        message: 'Standard secure delivery. Free shipping on orders above ₹999.',
+        message: 'Standard secure delivery. Express Pan-India delivery.',
       });
     }
   };
@@ -215,26 +220,18 @@ export default function ProductDetailClient({ product }) {
   // Cart & Direct Order
   const handleAddToCart = () => {
     const item = {
-      id: `${product.id}-${currentOpt.size}-${selectedCustomGrade || ''}`,
+      id: `${product.id}-${currentOpt.size}${selectedCustomGrade ? `-${selectedCustomGrade}` : ''}`,
+      productId: product.id,
       name: product.name,
       size: `${currentOpt.size}${selectedCustomGrade ? ` (${selectedCustomGrade})` : ''}`,
       price: currentOpt.price,
+      mrp: currentOpt.mrp,
       quantity,
       image: activeImage,
     };
 
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
-        );
-      }
-      return [...prev, item];
-    });
-
-    showToast(`Added ${quantity} × ${product.name} (${currentOpt.size}) to cart`);
-    setCartOpen(true);
+    addToCart(item);
+    showToast(`Added ${quantity} × ${product.name} (${currentOpt.size}) to bag`);
   };
 
   const handleBuyNow = () => {
@@ -810,6 +807,16 @@ export default function ProductDetailClient({ product }) {
         </div>
       </section>
 
+      {/* Product Specific FAQ Accordion */}
+      <FaqSection
+        title={`Frequently Asked Questions · ${product.name}`}
+        subtitle={`Detailed specifications, storage guidelines, and harvest origin standards for ${product.name} (${product.grade || ''}).`}
+        badge="PRODUCT FAQ & SPECS"
+        faqs={productFaqs}
+        id="product-faq"
+        showContactCta={true}
+      />
+
       {/* Recommended Harvests */}
       <section className="pdp-recommended-section">
         <div className="pdp-container">
@@ -1055,121 +1062,6 @@ export default function ProductDetailClient({ product }) {
                 </p>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Cart Slide-Over Drawer */}
-      {cartOpen && (
-        <div className="cart-drawer-overlay" onClick={() => setCartOpen(false)}>
-          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="cart-drawer-header">
-              <div className="cart-title-wrap">
-                <h3 className="cart-title">Your Harvest Bag</h3>
-                <span className="cart-items-count">({cart.length} items)</span>
-              </div>
-              <button
-                type="button"
-                className="cart-close-btn"
-                onClick={() => setCartOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-
-            {cart.length === 0 ? (
-              <div className="cart-empty">
-                <p>Your bag is empty.</p>
-                <button
-                  type="button"
-                  className="btn-buy-now"
-                  onClick={() => setCartOpen(false)}
-                >
-                  Continue Shopping
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items-list">
-                  {cart.map((item, idx) => (
-                    <div key={idx} className="cart-item-row-wrapper">
-                      <div className="cart-item-row">
-                        <img src={item.image} alt={item.name} className="cart-item-thumb" />
-                        <div className="cart-item-info">
-                          <h4 className="cart-item-name">{item.name}</h4>
-                          <span className="cart-item-size">{item.size}</span>
-                          <span className="cart-item-price">₹{item.price} × {item.quantity}</span>
-                        </div>
-                        <div className="cart-qty-ctrl">
-                          <button
-                            type="button"
-                            className="cart-qty-btn"
-                            onClick={() => {
-                              setCart((prev) =>
-                                prev
-                                  .map((i) =>
-                                    i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i
-                                  )
-                                  .filter((i) => i.quantity > 0)
-                              );
-                            }}
-                          >
-                            −
-                          </button>
-                          <span className="cart-qty-num">{item.quantity}</span>
-                          <button
-                            type="button"
-                            className="cart-qty-btn"
-                            onClick={() => {
-                              setCart((prev) =>
-                                prev.map((i) =>
-                                  i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-                                )
-                              );
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                        <span className="cart-item-total">₹{item.price * item.quantity}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="cart-footer">
-                  <div className="cart-subtotal-row">
-                    <span>Subtotal:</span>
-                    <span className="cart-subtotal-amt">
-                      ₹{cart.reduce((sum, i) => sum + i.price * i.quantity, 0)}
-                    </span>
-                  </div>
-                  <p className="cart-delivery-note">
-                    {cart.reduce((sum, i) => sum + i.price * i.quantity, 0) >= 999
-                      ? '✓ Free Shipping unlocked!'
-                      : 'Free shipping on orders above ₹999'}
-                  </p>
-                  <button
-                    type="button"
-                    className="btn-checkout"
-                    onClick={() => {
-                      const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-                      const itemsBreakup = cart
-                        .map((i) => `• ${i.name} (${i.size}) × ${i.quantity} = ₹${i.price * i.quantity}`)
-                        .join('\n');
-                      const msg =
-                        `*NEW ORDER FROM THE ORIGINAL (PALASA)*\n\n` +
-                        `*Order Items:*\n${itemsBreakup}\n\n` +
-                        `*Total:* ₹${total} (Tax Incl.)\n\n` +
-                        `Please confirm dispatch date & delivery details.`;
-                      window.open(`https://wa.me/919100267404?text=${encodeURIComponent(msg)}`, '_blank');
-                    }}
-                  >
-                    Checkout via WhatsApp (₹{cart.reduce((sum, i) => sum + i.price * i.quantity, 0)})
-                  </button>
-                </div>
-              </>
-            )}
           </div>
         </div>
       )}

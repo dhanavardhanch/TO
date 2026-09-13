@@ -211,7 +211,7 @@ export default function AboutPage() {
                   </li>
                   <li>
                     <span className="comparison-check">&#10003;</span>
-                    <span><strong>Strictly hand-sorted:</strong> Uniform calibers (W180, W220, W320, JH) with zero flaws</span>
+                    <span><strong>Strictly hand-sorted:</strong> Uniform calibers (W180, W240, W320, JH) with zero flaws</span>
                   </li>
                   <li>
                     <span className="comparison-check">&#10003;</span>

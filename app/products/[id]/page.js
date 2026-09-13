@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
 
   return {
     title: `${product.name} (${product.grade}) | The Original Palasa Cashews`,
-    description: `${product.tagline} — ${product.desc} Sourced directly from coastal Palasa, Andhra Pradesh. Free delivery on orders above ₹999.`,
+    description: `${product.tagline} — ${product.desc} Sourced directly from coastal Palasa, Andhra Pradesh. Reliable express pan-India dispatch.`,
     openGraph: {
       title: `${product.name} | The Original Palasa Cashews`,
       description: product.desc,

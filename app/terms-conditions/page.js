@@ -12,7 +12,7 @@ export default function TermsConditionsPage() {
     {
       num: '01',
       title: 'Premium Dry Fruit Catalog & Batch Variances',
-      desc: 'The Original retails premium agricultural food products, including whole and split cashew calibers (W180, W220, W320, JH), roasted skin cashews (Pottu Pappu), artisanal chocolate-coated nuts, and royal dry fruit mixes. All photographs, mockups, and descriptions are representative of our rigorous quality grades. Natural variances in kernel dimensions, color shades, or seasonal crunch may occur across harvest lots due to native soil terroir and climate characteristics.',
+      desc: 'The Original retails premium agricultural food products, including whole and split cashew calibers (W180, W240, W320, JH), roasted skin cashews (Pottu Pappu), artisanal chocolate-coated nuts, and royal dry fruit mixes. All photographs, mockups, and descriptions are representative of our rigorous quality grades. Natural variances in kernel dimensions, color shades, or seasonal crunch may occur across harvest lots due to native soil terroir and climate characteristics.',
     },
     {
       num: '02',
@@ -35,7 +35,7 @@ export default function TermsConditionsPage() {
     {
       num: '01',
       title: 'Shipping Schedules & Doorstep Delivery',
-      desc: 'Orders are freshly roasted, vacuum-sealed, and dispatched from Palasa within 1 to 2 business days of payment confirmation. Deliveries are routed via reputed national logistics partners (Delhivery, Blue Dart, DTDC, India Post Speed Post). Free shipping applies on prepaid orders of ₹999 and above, with a flat ₹70 fee on orders below ₹999. Estimated transit timelines are 3–5 business days for Metro hubs, 5–8 days for Rest of India, and 7–10 days for remote regions.',
+      desc: 'Orders are freshly roasted, vacuum-sealed, and dispatched from Palasa within 1 to 2 business days of payment confirmation. Deliveries are routed via reputed national logistics partners (Delhivery, Blue Dart, DTDC, India Post Speed Post). Standard express delivery applies pan-India at a flat ₹70 fee on all orders. Estimated transit timelines are 3–5 business days for Metro hubs, 5–8 days for Rest of India, and 7–10 days for remote regions.',
       linkHref: '/shipping-policy',
       linkLabel: 'Read Full Shipping Policy →',
     },

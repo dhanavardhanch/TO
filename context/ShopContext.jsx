@@ -157,6 +157,10 @@ export function ShopProvider({ children }) {
     return false;
   }, [coins]);
 
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+  const openCartDrawer = useCallback(() => setIsCartDrawerOpen(true), []);
+  const closeCartDrawer = useCallback(() => setIsCartDrawerOpen(false), []);
+
   const toggleRedeemCoins = useCallback(() => {
     if (coins >= REDEEM_THRESHOLD) {
       setIsCoinsRedeemed((prev) => !prev);
@@ -164,7 +168,17 @@ export function ShopProvider({ children }) {
   }, [coins]);
 
   // ── Cart helpers ────────────────────────────────────────────────
-  const addToCart = useCallback((item) => dispatch({ type: 'CART_ADD', item }), []);
+  const addToCart = useCallback((item, openDrawer = true) => {
+    dispatch({ type: 'CART_ADD', item });
+    if (openDrawer && typeof window !== 'undefined') {
+      // Don't pop drawer over /cart or /checkout pages
+      const path = window.location.pathname;
+      if (!path.startsWith('/cart') && !path.startsWith('/checkout')) {
+        setIsCartDrawerOpen(true);
+      }
+    }
+  }, []);
+
   const removeFromCart = useCallback((id) => dispatch({ type: 'CART_REMOVE', id }), []);
   const updateCartQty = useCallback((id, qty) => dispatch({ type: 'CART_UPDATE_QTY', id, qty }), []);
   const clearCart = useCallback(() => dispatch({ type: 'CART_CLEAR' }), []);
@@ -187,6 +201,11 @@ export function ShopProvider({ children }) {
         removeFromCart,
         updateCartQty,
         clearCart,
+        // Cart drawer state
+        isCartDrawerOpen,
+        setIsCartDrawerOpen,
+        openCartDrawer,
+        closeCartDrawer,
         // Original Coins wallet & transactions
         coins,
         coinsValue,
