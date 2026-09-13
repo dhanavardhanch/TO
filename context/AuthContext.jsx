@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
   const [coins, setCoins] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -22,6 +23,7 @@ export function AuthProvider({ children }) {
         setTransactions(savedTxns);
       }
     } catch { /* ignore */ }
+    setIsHydrated(true);
   }, []);
 
   // Persist coins when logged in
@@ -136,6 +138,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{
       user,
       isLoggedIn: !!user,
+      isHydrated,
       coins,
       transactions,
       login,

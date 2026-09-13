@@ -278,23 +278,13 @@ export default function GlobalCartDrawer() {
                   PROCEED TO CHECKOUT · ₹{grandTotal.toLocaleString('en-IN')}
                 </Link>
 
-                <div className="global-drawer-dual-links">
-                  <Link
-                    href="/cart"
-                    onClick={closeCartDrawer}
-                    className="btn-global-drawer-cart"
-                  >
-                    View Full Bag ({cartCount})
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={closeCartDrawer}
-                    className="btn-global-drawer-keep-shopping"
-                  >
-                    Keep Shopping
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={closeCartDrawer}
+                  className="btn-global-drawer-keep-shopping btn-continue-shopping-full"
+                >
+                  CONTINUE SHOPPING
+                </button>
               </div>
             </div>
           </>

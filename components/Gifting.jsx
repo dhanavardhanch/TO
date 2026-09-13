@@ -1,4 +1,41 @@
+'use client';
+
+import { useRef, useState, useEffect } from 'react';
+
 export default function Gifting() {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
+
+    const onPlay = () => setIsPlaying(true);
+    videoEl.addEventListener('playing', onPlay);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!videoEl.src || videoEl.src === window.location.href) {
+            videoEl.src = '/assets/gifting.mp4?v=3';
+            videoEl.load();
+          }
+          const p = videoEl.play();
+          if (p !== undefined) p.catch(() => {});
+        } else {
+          videoEl.pause();
+        }
+      },
+      { rootMargin: '300px 0px', threshold: 0.05 }
+    );
+
+    observer.observe(videoEl);
+    return () => {
+      videoEl.removeEventListener('playing', onPlay);
+      observer.disconnect();
+    };
+  }, []);
+
   const occasions = [
     {
       title: 'Corporate gifting & partnerships',
@@ -18,16 +55,24 @@ export default function Gifting() {
     <section className="section gifting" id="gifting">
       <div className="section-inner section-reveal">
         <div className="gifting-grid">
-          {/* Left Column: Gifting Video */}
+          {/* Left Column: Gifting Video with Instant Poster */}
           <div className="gifting-media-wrap">
             <div className="gifting-video-card">
+              <img
+                src="/assets/gifting-poster.jpg"
+                alt="The Original bespoke cashew gifting hamper"
+                className={`gifting-poster-img ${isPlaying ? 'fade-out' : ''}`}
+                loading="eager"
+                fetchPriority="high"
+              />
               <video
-                src="/assets/gifting.mp4?v=2"
+                ref={videoRef}
+                poster="/assets/gifting-poster.jpg"
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
                 className="gifting-video"
               />
             </div>

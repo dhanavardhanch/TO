@@ -57,9 +57,9 @@ export default function Nav() {
           {/* ── LEFT: Desktop nav links ── */}
           <nav className="nav-left-links" aria-label="Primary navigation">
             {LEFT_LINKS.map((l) => (
-              <a key={l.href} href={l.href} className="nav-link">
+              <Link key={l.href} href={l.href} className="nav-link">
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -86,9 +86,9 @@ export default function Nav() {
           <div className="nav-right-actions">
             {/* Desktop: extra right links */}
             {RIGHT_LINKS.map((l) => (
-              <a key={l.href} href={l.href} className="nav-link nav-link-right">
+              <Link key={l.href} href={l.href} className="nav-link nav-link-right">
                 {l.label}
-              </a>
+              </Link>
             ))}
 
             {/* Profile / Sign In Icon */}
@@ -159,7 +159,7 @@ export default function Nav() {
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-nav">
           {[...LEFT_LINKS, ...RIGHT_LINKS].map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               className="mobile-menu-link"
@@ -169,7 +169,7 @@ export default function Nav() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -200,6 +200,31 @@ export default function Nav() {
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </Link>
+
+              <div className="mobile-menu-sublinks">
+                <Link
+                  href="/profile?tab=orders"
+                  className="mobile-menu-sublink"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  📦 Order History
+                </Link>
+                <Link
+                  href="/profile?tab=wallet"
+                  className="mobile-menu-sublink"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  🪙 Coins &amp; Wallet
+                </Link>
+                <Link
+                  href="/profile?tab=addresses"
+                  className="mobile-menu-sublink"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  📍 Saved Addresses
+                </Link>
+              </div>
+
               <button
                 type="button"
                 className="mobile-menu-signout-btn"

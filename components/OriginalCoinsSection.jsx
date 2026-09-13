@@ -38,11 +38,11 @@ export default function OriginalCoinsSection() {
             <div className="step-icon-bubble">📦</div>
             <h3 className="step-title">Order Any Harvest</h3>
             <p className="step-text">
-              Place your order for fresh Palasa cashews. Once delivered safely to your doorstep, you get <strong>100 Coins</strong> automatically.
+              Place your order for fresh Palasa cashews. Once delivered safely to your doorstep, you get <strong>83 Coins</strong> automatically.
             </p>
             <div className="step-formula-pill">
               <span>1 Delivered Order = </span>
-              <strong>100 Coins</strong>
+              <strong>83 Coins</strong>
             </div>
           </div>
 
@@ -52,10 +52,10 @@ export default function OriginalCoinsSection() {
             <div className="step-icon-bubble">👛</div>
             <h3 className="step-title">Stacks in Your Wallet</h3>
             <p className="step-text">
-              Every 100 Coins = <strong>₹10 real cash value</strong>. Stored safely in your account with zero expiration and zero gimmicks.
+              Every 83 Coins = <strong>₹10 real cash value</strong>. Stored safely in your account with zero expiration and zero gimmicks.
             </p>
             <div className="step-formula-pill">
-              <span>100 Coins = </span>
+              <span>83 Coins = </span>
               <strong>₹10 Real Cash</strong>
             </div>
           </div>

@@ -1014,7 +1014,7 @@ export default function ProductsPageClient() {
                           </div>
 
                           <div className="product-coins-perk shop-card-coins-perk">
-                            <span className="coins-perk-text">🪙 Earn <strong>100 Coins</strong> (₹10 value)</span>
+                            <span className="coins-perk-text">🪙 Earn <strong>83 Coins</strong> (₹10 value)</span>
                           </div>
 
                           {/* Action Buttons */}

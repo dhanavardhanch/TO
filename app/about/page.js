@@ -1,5 +1,6 @@
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import LazyDroneVideo from '../../components/LazyDroneVideo';
 
 export const metadata = {
   title: 'About Us | The Original | Founder CH Dhana Vardhan & Palasa Roots',
@@ -53,15 +54,7 @@ export default function AboutPage() {
       <section className="about-drone-section">
         <div className="about-drone-inner">
           <div className="about-drone-card">
-            <video
-              src="/assets/about_drone.mp4?v=2"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="about-drone-video"
-            />
+            <LazyDroneVideo />
             <div className="about-drone-overlay">
               <div className="about-drone-badge">
                 <span className="about-drone-dot"></span>

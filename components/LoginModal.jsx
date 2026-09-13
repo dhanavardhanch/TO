@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 
 function CoinBenefitIcon() {
@@ -100,28 +101,30 @@ function EarlyAccessBenefitIcon() {
 const BENEFITS = [
   {
     icon: <CoinBenefitIcon />,
-    title: 'Earn Original Coins',
-    desc: 'Get rewarded on every order. Coins can be redeemed for discounts on future purchases.',
+    title: 'Earn 83 Coins (₹10 Value)',
+    desc: 'Get 83 coins on every successful order. Every 83 coins equals a ₹10 discount on future orders.',
   },
   {
     icon: <GiftBoxBenefitIcon />,
-    title: '100 Coins on First Login',
-    desc: 'Welcome to The Original — your 100 bonus coins are waiting, instantly credited.',
+    title: '100 Coins First-Time Bonus',
+    desc: 'Welcome bonus credited instantly to your wallet upon signing in for the very first time.',
   },
   {
     icon: <ShippingBenefitIcon />,
     title: 'Free Shipping Above ₹999',
-    desc: 'Orders over ₹999 ship free across India, direct from our factory in Palasa.',
+    desc: 'Signed-in members enjoy 100% free pan-India shipping on all orders over ₹999.',
   },
   {
     icon: <EarlyAccessBenefitIcon />,
-    title: 'Early Access & Discounts',
-    desc: 'Be the first to know about new harvests, limited drops, and exclusive member offers.',
+    title: 'Early Access & Member Drops',
+    desc: 'First access to limited jumbo harvests, seasonal calibers, and exclusive member discounts.',
   },
 ];
 
 export default function LoginModal() {
   const { isLoginModalOpen, closeLoginModal, login } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const [authMode, setAuthMode] = useState('email'); // 'email' | 'phone'
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -208,6 +211,9 @@ export default function LoginModal() {
         login({ email: mail, phone: '', name: formattedName });
       } else {
         login({ phone, email: '', name: `User ${phone.slice(-4)}` });
+      }
+      if (pathname !== '/checkout') {
+        router.push('/profile');
       }
     }, 1100);
   };

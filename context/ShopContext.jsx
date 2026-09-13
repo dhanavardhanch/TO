@@ -47,10 +47,10 @@ function shopReducer(state, action) {
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-export const COINS_PER_ORDER = 100;      // 100 Coins per delivered order
-export const COINS_VALUE_RUPEES = 10;    // 100 Coins = Rs.10 (1 coin = Rs.0.10)
-export const REDEEM_THRESHOLD = 5000;    // 5,000 Coins needed to redeem
-export const REDEEM_DISCOUNT = 500;      // 5,000 Coins = Rs.500 flat discount
+export const COINS_PER_ORDER = 83;       // 83 Coins per delivered order (Rs.10 value)
+export const COINS_VALUE_RUPEES = 10;     // 83 Coins = Rs.10
+export const REDEEM_THRESHOLD = 5000;     // 5,000 Coins needed to redeem
+export const REDEEM_DISCOUNT = 500;       // 5,000 Coins = Rs.500 flat discount
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 const ShopContext = createContext(null);
@@ -186,7 +186,7 @@ export function ShopProvider({ children }) {
   // ── Computed ────────────────────────────────────────────────────
   const cartCount = state.cart.reduce((sum, c) => sum + c.quantity, 0);
   const cartTotal = state.cart.reduce((sum, c) => sum + c.price * c.quantity, 0);
-  const coinsValue = Math.round(coins * 0.1); // 100 coins = Rs.10
+  const coinsValue = Math.round((coins / 83) * 10); // 83 coins = Rs.10
   const canRedeemCoins = coins >= REDEEM_THRESHOLD;
   const coinsNeededForRedeem = Math.max(0, REDEEM_THRESHOLD - coins);
   const progressPercent = Math.min(100, Math.round((coins / REDEEM_THRESHOLD) * 100));

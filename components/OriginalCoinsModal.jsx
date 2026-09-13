@@ -99,7 +99,7 @@ export default function OriginalCoinsModal() {
             <div className="coins-rupee-equiv">
               <span>Real Value:</span>
               <strong className="rupee-tag">₹{coinsValue.toLocaleString('en-IN')}</strong>
-              <span className="rate-hint">(100 Coins = ₹10)</span>
+              <span className="rate-hint">(83 Coins = ₹10)</span>
             </div>
           </div>
         </div>
@@ -149,9 +149,9 @@ export default function OriginalCoinsModal() {
               <div className="coin-step-icon">📦</div>
               <h4 className="coin-step-title">Order Any Pack</h4>
               <p className="coin-step-desc">
-                For every delivered order, you automatically get <strong>100 Original Coins</strong>.
+                For every delivered order, you automatically get <strong>83 Original Coins</strong>.
               </p>
-              <span className="coin-step-highlight">+100 Coins = ₹10 Value</span>
+              <span className="coin-step-highlight">+83 Coins = ₹10 Value</span>
             </div>
 
             {/* Step 2 */}
@@ -223,9 +223,9 @@ export default function OriginalCoinsModal() {
           <button
             type="button"
             className="btn-coins-test-add"
-            onClick={() => handleSimulateEarn(100)}
+            onClick={() => handleSimulateEarn(83)}
           >
-            <span>+ Simulate 1 Delivered Order (+100 Coins)</span>
+            <span>+ Simulate 1 Delivered Order (+83 Coins)</span>
           </button>
           {!canRedeemCoins && (
             <button

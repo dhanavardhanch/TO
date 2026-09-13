@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useShop } from '../context/ShopContext';
+import { useAuth } from '../context/AuthContext';
 import Nav from './Nav';
 import Footer from './Footer';
 
@@ -19,12 +20,28 @@ export default function CheckoutPageClient() {
     redeemCoins,
   } = useShop();
 
+  const { isLoggedIn, openLoginModal, user } = useAuth();
+
   const [form, setForm] = useState({ name: '', phone: '', email: '', address: '', pincode: '', notes: '' });
   const [submitted, setSubmitted] = useState(false);
   const [earnedSummary, setEarnedSummary] = useState(null);
 
-  const deliveryCharge = 70;
-  const coinsDiscount = isCoinsRedeemed && canRedeemCoins ? 500 : 0;
+  // Auto-fill form if user is signed in
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      setForm((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [isLoggedIn, user]);
+
+  // Free shipping on order above 999 ONLY when signed in
+  const freeShippingUnlocked = isLoggedIn && cartTotal >= 999;
+  const deliveryCharge = freeShippingUnlocked ? 0 : 70;
+  const coinsDiscount = isLoggedIn && isCoinsRedeemed && canRedeemCoins ? 500 : 0;
   const finalTotal = Math.max(0, cartTotal + deliveryCharge - coinsDiscount);
 
   const handleChange = (e) => {
@@ -43,25 +60,39 @@ export default function CheckoutPageClient() {
     cart.forEach((item, idx) => {
       text += `${idx + 1}. ${item.name} (${item.size}) x${item.quantity} = Rs.${item.price * item.quantity}\n`;
     });
-    if (coinsDiscount > 0) {
-      text += `*Coins Discount Redeemed:* -Rs.500 (5,000 Coins)\n`;
+    if (isLoggedIn) {
+      if (coinsDiscount > 0) {
+        text += `*Coins Discount Redeemed:* -Rs.500 (5,000 Coins)\n`;
+      }
+      text += `*Delivery:* ${freeShippingUnlocked ? 'FREE (Order above Rs.999 - Member Perk)' : `Rs.${deliveryCharge}`}\n`;
+      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\n*Original Coins Reward:* +83 Coins (upon delivery)\nPlease confirm and share payment details.`;
+    } else {
+      text += `*Delivery:* Rs.${deliveryCharge}\n`;
+      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\nPlease confirm and share payment details.`;
     }
-    text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\n*Original Coins Reward:* +100 Coins (upon delivery)\nPlease confirm and share payment details.`;
     window.open(`https://wa.me/919100267404?text=${encodeURIComponent(text)}`, '_blank');
 
     const orderNum = Math.floor(1000 + Math.random() * 9000);
     const orderId = `TO-${orderNum}`;
 
-    // Credit 100 Original Coins for the order into wallet with transaction record
-    addCoins(100, orderId);
-    if (coinsDiscount > 0) {
-      redeemCoins(orderId);
+    if (isLoggedIn) {
+      // Credit 83 Original Coins for the order into wallet (83 coins = Rs 10)
+      addCoins(83, orderId);
+      if (coinsDiscount > 0) {
+        redeemCoins(orderId);
+      }
+      setEarnedSummary({
+        addedCoins: 83,
+        newTotal: coinsDiscount > 0 ? (coins - 5000 + 83) : (coins + 83),
+        orderId,
+      });
+    } else {
+      setEarnedSummary({
+        addedCoins: 0,
+        newTotal: 0,
+        orderId,
+      });
     }
-    setEarnedSummary({
-      addedCoins: 100,
-      newTotal: coinsDiscount > 0 ? (coins - 5000 + 100) : (coins + 100),
-      orderId,
-    });
     clearCart();
     setSubmitted(true);
   };
@@ -82,28 +113,47 @@ export default function CheckoutPageClient() {
             <p className="checkout-success-sub">Your order has been shared on WhatsApp. We will confirm and dispatch from Palasa shortly.</p>
 
             {/* Original Coins Earned Banner */}
-            <div className="checkout-coins-earned-card">
-              <div className="coin-earned-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
-                  <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
-                  <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
-                </svg>
+            {isLoggedIn ? (
+              <div className="checkout-coins-earned-card">
+                <div className="coin-earned-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                    <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
+                    <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+                  </svg>
+                </div>
+                <div className="coin-earned-content">
+                  <h3 className="coin-earned-title">+83 Original Coins Credited to Your Wallet!</h3>
+                  <p className="coin-earned-text">
+                    Order <strong>#{earnedSummary?.orderId}</strong> reward recorded. Your current balance is now <strong>{earnedSummary?.newTotal.toLocaleString('en-IN') || (coins + 83)} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || (coins + 83)) / 83) * 10)} value).
+                    When your wallet reaches 5,000 Coins, you unlock a flat ₹500 discount!
+                  </p>
+                  <Link
+                    href="/wallet"
+                    className="btn-view-wallet-mini"
+                  >
+                    View Wallet &amp; Transactions &rarr;
+                  </Link>
+                </div>
               </div>
-              <div className="coin-earned-content">
-                <h3 className="coin-earned-title">+100 Original Coins Credited to Your Wallet!</h3>
-                <p className="coin-earned-text">
-                  Order <strong>#{earnedSummary?.orderId}</strong> reward recorded. Your current balance is now <strong>{earnedSummary?.newTotal.toLocaleString('en-IN') || (coins + 100)} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || (coins + 100))) * 0.1)} value).
-                  When your wallet reaches 5,000 Coins, you unlock a flat ₹500 discount!
-                </p>
-                <Link
-                  href="/wallet"
-                  className="btn-view-wallet-mini"
-                >
-                  View Wallet & Transactions &rarr;
-                </Link>
+            ) : (
+              <div className="checkout-coins-earned-card checkout-guest-claim-card">
+                <div className="coin-earned-icon">🪙</div>
+                <div className="coin-earned-content">
+                  <h3 className="coin-earned-title">Claim Your 183 Original Coins!</h3>
+                  <p className="coin-earned-text">
+                    Sign in with the phone or email used for this order to receive your <strong>100 Welcome Coins</strong> plus <strong>83 Order Reward Coins</strong>!
+                  </p>
+                  <button
+                    type="button"
+                    onClick={openLoginModal}
+                    className="btn-view-wallet-mini btn-claim-coins-now"
+                  >
+                    Sign In to Claim Coins &rarr;
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             <Link href="/products" className="btn-primary cart-shop-btn">Continue Shopping</Link>
           </div>
@@ -126,7 +176,7 @@ export default function CheckoutPageClient() {
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload="none"
                 className="cart-empty-video"
               >
                 <source src="/assets/empty_cart_animation.webm" type="video/webm" />
@@ -229,8 +279,22 @@ export default function CheckoutPageClient() {
                   <div className="cart-summary-row"><span>Subtotal</span><span>Rs.{cartTotal.toLocaleString('en-IN')}</span></div>
                   <div className="cart-summary-row">
                     <span>Standard Express Delivery</span>
-                    <span>Rs.{deliveryCharge}</span>
+                    {freeShippingUnlocked ? (
+                      <span className="free-shipping-badge">
+                        <s style={{ opacity: 0.55, marginRight: 6 }}>Rs.70</s>
+                        <strong style={{ color: '#16a34a' }}>FREE</strong>
+                      </span>
+                    ) : (
+                      <span>Rs.{deliveryCharge}</span>
+                    )}
                   </div>
+                  {!isLoggedIn && cartTotal >= 999 && (
+                    <div className="checkout-perk-hint-row">
+                      <span style={{ fontSize: '11.5px', color: '#B45309', fontWeight: 600 }}>
+                        💡 Sign in below to get FREE Delivery on this order!
+                      </span>
+                    </div>
+                  )}
                   {coinsDiscount > 0 && (
                     <div className="cart-summary-row coins-discount">
                       <span>Voucher: 5,000 Coins Redeemed</span>
@@ -241,56 +305,79 @@ export default function CheckoutPageClient() {
                   <div className="cart-summary-row total"><span>Total</span><span>Rs.{finalTotal.toLocaleString('en-IN')}</span></div>
                 </div>
 
-                {/* Original Coins Earn & Redeem Box */}
-                <div className="checkout-coins-summary-box">
-                  <div className="coins-box-header">
-                    <div className="coins-box-title-row">
-                      <div className="coins-box-svg-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
-                          <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
-                          <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
-                        </svg>
+                {/* Original Coins & Member Perks: Only show active coins if signed in */}
+                {isLoggedIn ? (
+                  <div className="checkout-coins-summary-box">
+                    <div className="coins-box-header">
+                      <div className="coins-box-title-row">
+                        <div className="coins-box-svg-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                            <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
+                            <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+                          </svg>
+                        </div>
+                        <span className="coins-title">Original Coins Rewards</span>
                       </div>
-                      <span className="coins-title">Original Coins Rewards</span>
+                      <Link
+                        href="/wallet"
+                        className="coins-info-link"
+                      >
+                        Wallet ({coins.toLocaleString('en-IN')})
+                      </Link>
                     </div>
-                    <Link
-                      href="/wallet"
-                      className="coins-info-link"
+
+                    <div className="coins-earn-notice">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                      </svg>
+                      <span>Earn <strong>+83 Original Coins</strong> (₹10 value) upon delivery!</span>
+                    </div>
+
+                    {canRedeemCoins ? (
+                      <div className="coins-redeem-available">
+                        <label className="coins-redeem-checkbox-label">
+                          <input
+                            type="checkbox"
+                            checked={isCoinsRedeemed}
+                            onChange={toggleRedeemCoins}
+                            className="coins-redeem-checkbox"
+                          />
+                          <span className="coins-redeem-text">
+                            Redeem 5,000 Coins for <strong>₹500 OFF</strong>
+                          </span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="coins-needed-hint">
+                        <span><strong>{Math.max(0, 5000 - coins).toLocaleString('en-IN')} more coins</strong> until your flat ₹500 discount voucher.</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="checkout-coins-summary-box checkout-signin-prompt-card">
+                    <div className="signin-prompt-header">
+                      <span className="signin-prompt-icon">🪙</span>
+                      <div>
+                        <div className="signin-prompt-title">Sign In for Coins &amp; Free Delivery</div>
+                        <p className="signin-prompt-desc">
+                          {cartTotal >= 999
+                            ? 'Sign in now to get FREE Delivery on this order (save ₹70) plus 83 Coins!'
+                            : 'Sign in to earn 83 Original Coins (₹10 value) on every order & unlock free shipping above ₹999.'}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={openLoginModal}
+                      className="btn-checkout-signin-unlock"
                     >
-                      Wallet ({coins.toLocaleString('en-IN')})
-                    </Link>
+                      Sign In to Unlock &rarr;
+                    </button>
                   </div>
-
-                  <div className="coins-earn-notice">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    <span>Earn <strong>+100 Original Coins</strong> (₹10 value) upon delivery!</span>
-                  </div>
-
-                  {canRedeemCoins ? (
-                    <div className="coins-redeem-available">
-                      <label className="coins-redeem-checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={isCoinsRedeemed}
-                          onChange={toggleRedeemCoins}
-                          className="coins-redeem-checkbox"
-                        />
-                        <span className="coins-redeem-text">
-                          Redeem 5,000 Coins for <strong>₹500 OFF</strong>
-                        </span>
-                      </label>
-                    </div>
-                  ) : (
-                    <div className="coins-needed-hint">
-                      <span><strong>{Math.max(0, 5000 - coins).toLocaleString('en-IN')} more coins</strong> until your flat ₹500 discount voucher.</span>
-                    </div>
-                  )}
-                </div>
+                )}
 
                 <button type="submit" form="checkout-form" className="btn-buy-now cart-checkout-btn checkout-place-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

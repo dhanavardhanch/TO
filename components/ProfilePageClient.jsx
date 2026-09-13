@@ -72,9 +72,20 @@ const MOCK_ORDERS = [
 ];
 
 export default function ProfilePageClient() {
-  const { isLoggedIn, user, coins, transactions, logout, updateProfile, openLoginModal } = useAuth();
+  const { isLoggedIn, isHydrated, user, coins, transactions, logout, updateProfile, openLoginModal } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('profile');
+
+  // Check URL query tab on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam && ['profile', 'orders', 'wallet', 'addresses'].includes(tabParam)) {
+        setActiveTab(tabParam);
+      }
+    }
+  }, []);
 
   // Editing state
   const [editMode, setEditMode] = useState(false);
@@ -99,15 +110,15 @@ export default function ProfilePageClient() {
     } catch { /* ignore */ }
   }, [user]);
 
-  // Redirect to home + open login if not logged in
+  // Redirect to home + open login if not logged in (only AFTER hydration)
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isHydrated && !isLoggedIn) {
       openLoginModal();
       router.replace('/');
     }
-  }, [isLoggedIn, openLoginModal, router]);
+  }, [isHydrated, isLoggedIn, openLoginModal, router]);
 
-  if (!isLoggedIn || !user) return null;
+  if (!isHydrated || !isLoggedIn || !user) return null;
 
   const handleSaveProfile = () => {
     updateProfile({ name: formName, email: formEmail, phone: formPhone });

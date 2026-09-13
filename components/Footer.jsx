@@ -31,9 +31,12 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand & Origin column */}
           <div className="footer-col footer-col-brand">
-            <div className="brand footer-brand">
-              <div className="brand-mark">TO</div>
-              <span className="brand-name">The Original</span>
+            <div className="footer-brand">
+              <div className="footer-brand-mark">TO</div>
+              <div className="footer-brand-text-wrap">
+                <span className="footer-brand-title">The Original</span>
+                <span className="footer-brand-sub">From the Cashew Capital, Palasa</span>
+              </div>
             </div>
             <p className="footer-tagline">
               Hand picked from heirloom orchards in Palasa, Andhra Pradesh.

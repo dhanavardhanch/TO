@@ -1,10 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
 
 export default function GiftingPageClient() {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
+
+    const onPlay = () => setIsPlaying(true);
+    videoEl.addEventListener('playing', onPlay);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!videoEl.src || videoEl.src === window.location.href) {
+            videoEl.src = '/assets/gifting.mp4?v=3';
+            videoEl.load();
+          }
+          const p = videoEl.play();
+          if (p !== undefined) p.catch(() => {});
+        } else {
+          videoEl.pause();
+        }
+      },
+      { rootMargin: '300px 0px', threshold: 0.05 }
+    );
+
+    observer.observe(videoEl);
+    return () => {
+      videoEl.removeEventListener('playing', onPlay);
+      observer.disconnect();
+    };
+  }, []);
+
   const [form, setForm] = useState({
     name: '',
     company: '',
@@ -134,13 +167,21 @@ export default function GiftingPageClient() {
         <div className="gifting-showcase-inner">
           <div className="gifting-showcase-grid">
             <div className="gifting-video-wrapper">
+              <img
+                src="/assets/gifting-poster.jpg"
+                alt="The Original Signature Gifting Presentation"
+                className={`gifting-poster-img ${isPlaying ? 'fade-out' : ''}`}
+                loading="eager"
+                fetchPriority="high"
+              />
               <video
-                src="/assets/gifting.mp4?v=2"
+                ref={videoRef}
+                poster="/assets/gifting-poster.jpg"
                 autoPlay
-                loop
                 muted
+                loop
                 playsInline
-                preload="auto"
+                preload="metadata"
                 className="gifting-presentation-video"
               />
               <div className="gifting-video-badge">

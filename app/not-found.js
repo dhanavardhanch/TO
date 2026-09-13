@@ -20,7 +20,7 @@ export default function NotFound() {
               loop
               muted
               playsInline
-              preload="auto"
+              preload="none"
               className="cart-empty-video"
             >
               <source src="/assets/empty_cart_animation.webm" type="video/webm" />

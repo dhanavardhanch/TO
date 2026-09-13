@@ -52,7 +52,7 @@ export default function WalletPageClient() {
                   <line x1="12" y1="1" x2="12" y2="23"></line>
                   <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
-                <span>₹{coinsValue.toLocaleString('en-IN')} Real Cash Value (100 Coins = ₹10)</span>
+                <span>₹{coinsValue.toLocaleString('en-IN')} Real Cash Value (83 Coins = ₹10)</span>
               </div>
             </div>
 
@@ -133,7 +133,7 @@ export default function WalletPageClient() {
                 </div>
                 <h3 className="wallet-rule-title">Safe in Your Wallet</h3>
                 <p className="wallet-rule-desc">
-                  <strong>100 Coins = ₹10 Real Cash Value</strong>. Your coins accumulate securely with <strong>zero expiration date</strong>.
+                  <strong>83 Coins = ₹10 Real Cash Value</strong>. Your coins accumulate securely with <strong>zero expiration date</strong>.
                 </p>
               </div>
 
