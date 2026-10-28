@@ -38,11 +38,27 @@ export default function CheckoutPageClient() {
     }
   }, [isLoggedIn, user]);
 
+  // Unique cashew varieties in cart (if 1 item added multiple times e.g. W180 x 3, coin counts only 1 time = 83 coins)
+  const uniqueProductsCount = new Set(
+    cart.map((item) => item.productId || item.name?.split(' (')[0] || item.id)
+  ).size || (cart.length > 0 ? 1 : 0);
+
+  const totalEarnedCoins = uniqueProductsCount * 83; // 1 item = 83 coins, 2 items = 166 coins
+
+  // Toggle state to use 100 coins for ₹10 instant discount now
+  // Available if order has 2+ items (166 coins) OR user has >= 100 coins in wallet
+  const canUseInstantCoins = totalEarnedCoins >= 100 || (isLoggedIn && coins >= 100);
+  const [useCoinsDiscount, setUseCoinsDiscount] = useState(true);
+
+  const instantDiscount = canUseInstantCoins && useCoinsDiscount ? 10 : 0;
+  const coinsUsedForInstant = instantDiscount > 0 ? 100 : 0;
+  const remainingCoinsToWallet = Math.max(0, totalEarnedCoins - coinsUsedForInstant);
+
   // Free shipping on order above 999 ONLY when signed in
   const freeShippingUnlocked = isLoggedIn && cartTotal >= 999;
   const deliveryCharge = freeShippingUnlocked ? 0 : 70;
-  const coinsDiscount = isLoggedIn && isCoinsRedeemed && canRedeemCoins ? 500 : 0;
-  const finalTotal = Math.max(0, cartTotal + deliveryCharge - coinsDiscount);
+  const voucherDiscount = isLoggedIn && isCoinsRedeemed && canRedeemCoins ? 500 : 0;
+  const finalTotal = Math.max(0, cartTotal + deliveryCharge - instantDiscount - voucherDiscount);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -60,18 +76,23 @@ export default function CheckoutPageClient() {
     cart.forEach((item, idx) => {
       text += `${idx + 1}. ${item.name} (${item.size}) x${item.quantity} = Rs.${item.price * item.quantity}\n`;
     });
-    const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0) || 1;
-    const totalEarnedCoins = totalItemsCount * 83;
-
     if (isLoggedIn) {
-      if (coinsDiscount > 0) {
-        text += `*Coins Discount Redeemed:* -Rs.500 (5,000 Coins)\n`;
+      if (instantDiscount > 0) {
+        text += `*Coins Instant Discount:* -Rs.10 (100 Coins applied)\n`;
+      }
+      if (voucherDiscount > 0) {
+        text += `*Coins Voucher Discount:* -Rs.500 (5,000 Coins)\n`;
       }
       text += `*Delivery:* ${freeShippingUnlocked ? 'FREE (Order above Rs.999 - Member Perk)' : `Rs.${deliveryCharge}`}\n`;
-      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\n*Original Coins Reward:* +${totalEarnedCoins} Coins (${totalItemsCount} items × 83 Coins · 100 coins = Rs.10)\nPlease confirm and share payment details.`;
+      text += `\n*Total to Pay:* Rs.${finalTotal.toLocaleString('en-IN')}\n`;
+      text += `*Original Coins Credited on Delivery:* +${remainingCoinsToWallet} Coins (${uniqueProductsCount} unique varieties × 83 Coins${instantDiscount > 0 ? ' - 100 Coins used for Rs.10 discount' : ''})\nPlease confirm and share payment details.`;
     } else {
+      if (instantDiscount > 0) {
+        text += `*Coins Instant Discount:* -Rs.10 (100 Coins applied)\n`;
+      }
       text += `*Delivery:* Rs.${deliveryCharge}\n`;
-      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\nPlease confirm and share payment details.`;
+      text += `\n*Total to Pay:* Rs.${finalTotal.toLocaleString('en-IN')}\n`;
+      text += `*Original Coins Credited on Delivery:* +${remainingCoinsToWallet} Coins\nPlease confirm and share payment details.`;
     }
     window.open(`https://wa.me/919100267404?text=${encodeURIComponent(text)}`, '_blank');
 
@@ -79,20 +100,29 @@ export default function CheckoutPageClient() {
     const orderId = `TO-${orderNum}`;
 
     if (isLoggedIn) {
-      // Credit 83 Original Coins per item in the order into wallet (100 coins = Rs 10)
-      addCoins(totalEarnedCoins, orderId);
-      if (coinsDiscount > 0) {
+      // Credit remaining coins into wallet (e.g. in 166 coins with 100 coins used for Rs.10 discount, rest 66 coins are added)
+      if (remainingCoinsToWallet > 0) {
+        addCoins(remainingCoinsToWallet, orderId);
+      }
+      if (voucherDiscount > 0) {
         redeemCoins(orderId);
       }
+      const calculatedNewTotal = coins - (voucherDiscount > 0 ? 5000 : 0) + remainingCoinsToWallet;
       setEarnedSummary({
-        addedCoins: totalEarnedCoins,
-        newTotal: coinsDiscount > 0 ? (coins - 5000 + totalCoinsEarned) : (coins + totalCoinsEarned),
+        addedCoins: remainingCoinsToWallet,
+        totalEarnedCoins,
+        instantDiscount,
+        coinsUsedForInstant,
+        newTotal: calculatedNewTotal,
         orderId,
       });
     } else {
       setEarnedSummary({
-        addedCoins: 0,
-        newTotal: 0,
+        addedCoins: remainingCoinsToWallet,
+        totalEarnedCoins,
+        instantDiscount,
+        coinsUsedForInstant,
+        newTotal: remainingCoinsToWallet,
         orderId,
       });
     }
@@ -126,10 +156,20 @@ export default function CheckoutPageClient() {
                   </svg>
                 </div>
                 <div className="coin-earned-content">
-                  <h3 className="coin-earned-title">+{earnedSummary?.addedCoins || 83} Original Coins Credited to Your Wallet!</h3>
+                  <h3 className="coin-earned-title">
+                    {earnedSummary?.instantDiscount > 0
+                      ? `₹10 Discount Applied! +${earnedSummary?.addedCoins} Coins Added to Wallet`
+                      : `+${earnedSummary?.addedCoins} Original Coins Credited to Your Wallet!`}
+                  </h3>
                   <p className="coin-earned-text">
-                    Order <strong>#{earnedSummary?.orderId}</strong> reward recorded ({earnedSummary?.addedCoins} Coins at 83 Coins/item). Your current balance is now <strong>{earnedSummary?.newTotal.toLocaleString('en-IN') || (coins + 83)} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || (coins + 83)) / 100) * 10)} value).
-                    When your wallet reaches 5,000 Coins, you unlock a flat ₹500 discount!
+                    Order <strong>#{earnedSummary?.orderId}</strong> reward processed.
+                    {earnedSummary?.instantDiscount > 0 ? (
+                      <> You saved <strong>₹10</strong> with 100 Coins, and the remaining <strong>+{earnedSummary?.addedCoins} Coins</strong> have been added to your wallet upon delivery.</>
+                    ) : (
+                      <> <strong>+{earnedSummary?.addedCoins} Coins</strong> ({uniqueProductsCount} unique varieties × 83 Coins) have been credited to your wallet.</>
+                    )}
+                    {' '}Your current balance is now <strong>{(earnedSummary?.newTotal || coins).toLocaleString('en-IN')} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || coins) / 100) * 10)} value).
+                    When your wallet reaches 5,000 Coins, you unlock a flat ₹500 discount voucher!
                   </p>
                   <Link
                     href="/wallet"
@@ -143,9 +183,13 @@ export default function CheckoutPageClient() {
               <div className="checkout-coins-earned-card checkout-guest-claim-card">
                 <div className="coin-earned-icon">🪙</div>
                 <div className="coin-earned-content">
-                  <h3 className="coin-earned-title">Claim Your {100 + (earnedSummary?.addedCoins || 83)} Original Coins!</h3>
+                  <h3 className="coin-earned-title">
+                    {earnedSummary?.instantDiscount > 0
+                      ? `Saved ₹10! Claim Your 100 Welcome + ${earnedSummary?.addedCoins} Coins`
+                      : `Claim Your ${100 + (earnedSummary?.addedCoins || 0)} Original Coins!`}
+                  </h3>
                   <p className="coin-earned-text">
-                    Sign in with the phone or email used for this order to receive your <strong>100 Welcome Coins</strong> plus <strong>{earnedSummary?.addedCoins || 83} Order Reward Coins</strong> (100 coins = ₹10)!
+                    Sign in with the phone or email used for this order to receive your <strong>100 Welcome Coins</strong> plus <strong>{earnedSummary?.addedCoins} Order Reward Coins</strong> (100 coins = ₹10)!
                   </p>
                   <button
                     type="button"
@@ -298,7 +342,15 @@ export default function CheckoutPageClient() {
                       </span>
                     </div>
                   )}
-                  {coinsDiscount > 0 && (
+                  {instantDiscount > 0 && (
+                    <div className="cart-summary-row coins-discount">
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <span>🪙</span> Original Coins Discount (100 Coins)
+                      </span>
+                      <span className="discount-amount" style={{ color: '#16a34a', fontWeight: 700 }}>-Rs.10</span>
+                    </div>
+                  )}
+                  {voucherDiscount > 0 && (
                     <div className="cart-summary-row coins-discount">
                       <span>Voucher: 5,000 Coins Redeemed</span>
                       <span className="discount-amount">-Rs.500</span>
@@ -330,21 +382,56 @@ export default function CheckoutPageClient() {
                       </Link>
                     </div>
 
+                    {/* Instant Coins Discount Toggle */}
+                    {canUseInstantCoins && (
+                      <div className="coins-instant-toggle-card">
+                        <div className="coins-toggle-header">
+                          <div className="coins-toggle-info">
+                            <div className="coins-toggle-title-wrap">
+                              <span className="coins-toggle-badge">⚡ Coins Discount</span>
+                              <span className="coins-toggle-title">Use 100 Coins for ₹10 OFF</span>
+                            </div>
+                            <p className="coins-toggle-sub">
+                              {useCoinsDiscount ? (
+                                <>
+                                  100 Coins applied for <strong>₹10 instant discount</strong>.
+                                  {remainingCoinsToWallet > 0 ? (
+                                    <> Rest <strong>+{remainingCoinsToWallet} Coins</strong> will be added to your wallet upon delivery!</>
+                                  ) : (
+                                    <> Remaining coins will be added upon delivery.</>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  Toggle ON to save ₹10 right now, or keep full <strong>+{totalEarnedCoins} Coins</strong> in wallet for bigger discounts!
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
+                            <input
+                              type="checkbox"
+                              checked={useCoinsDiscount}
+                              onChange={(e) => setUseCoinsDiscount(e.target.checked)}
+                            />
+                            <span className="coins-slider"></span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="coins-earn-notice">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                       </svg>
-                      {(() => {
-                        const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0) || 1;
-                        const earn = totalQty * 83;
-                        return (
-                          <span>
-                            Earn <strong>+{earn} Original Coins</strong> ({totalQty} {totalQty === 1 ? 'item' : 'items'} × 83 Coins · 100 coins = ₹10) upon delivery!
-                          </span>
-                        );
-                      })()}
+                      <span>
+                        Order earns <strong>+{totalEarnedCoins} Original Coins</strong> ({uniqueProductsCount} {uniqueProductsCount === 1 ? 'item' : 'items'} × 83 Coins · 100 coins = ₹10).
+                        {instantDiscount > 0
+                          ? ` (100 coins applied for ₹10 discount · rest +${remainingCoinsToWallet} coins will add to wallet upon delivery)`
+                          : ` (Will add to wallet upon delivery)`}
+                      </span>
                     </div>
 
                     {canRedeemCoins ? (
@@ -369,6 +456,37 @@ export default function CheckoutPageClient() {
                   </div>
                 ) : (
                   <div className="checkout-coins-summary-box checkout-signin-prompt-card">
+                    {canUseInstantCoins && (
+                      <div className="coins-instant-toggle-card" style={{ marginBottom: 14 }}>
+                        <div className="coins-toggle-header">
+                          <div className="coins-toggle-info">
+                            <div className="coins-toggle-title-wrap">
+                              <span className="coins-toggle-badge">⚡ Coins Discount</span>
+                              <span className="coins-toggle-title">Use 100 Coins for ₹10 OFF</span>
+                            </div>
+                            <p className="coins-toggle-sub">
+                              {useCoinsDiscount ? (
+                                <>
+                                  100 Coins applied for <strong>₹10 instant discount</strong>. Sign in below or after order to receive rest <strong>+{remainingCoinsToWallet} Coins</strong> in your wallet!
+                                </>
+                              ) : (
+                                <>
+                                  Toggle ON to save ₹10 now with 100 Coins!
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
+                            <input
+                              type="checkbox"
+                              checked={useCoinsDiscount}
+                              onChange={(e) => setUseCoinsDiscount(e.target.checked)}
+                            />
+                            <span className="coins-slider"></span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
                     <div className="signin-prompt-header">
                       <span className="signin-prompt-icon">🪙</span>
                       <div>
@@ -376,7 +494,7 @@ export default function CheckoutPageClient() {
                         <p className="signin-prompt-desc">
                           {cartTotal >= 999
                             ? 'Sign in now to get FREE Delivery on this order (save ₹70) plus 83 Coins!'
-                            : 'Sign in to earn 83 Original Coins (₹10 value) on every order & unlock free shipping above ₹999.'}
+                            : `Sign in to earn ${totalEarnedCoins} Original Coins (100 coins = ₹10) & unlock free shipping above ₹999.`}
                         </p>
                       </div>
                     </div>

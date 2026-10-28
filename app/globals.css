@@ -9856,6 +9856,107 @@ button:focus-visible {
   color: #1A6B3D;
 }
 
+/* ── Coins Instant Discount Toggle Box ───────────────────── */
+.coins-instant-toggle-card {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(201, 164, 85, 0.12), rgba(201, 164, 85, 0.05));
+  border: 1.5px solid rgba(201, 164, 85, 0.38);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.coins-toggle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.coins-toggle-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.coins-toggle-label-text {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-deep);
+}
+
+.coins-toggle-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1A6B3D;
+  background: rgba(26, 107, 61, 0.12);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(26, 107, 61, 0.25);
+}
+
+/* Switch Component */
+.coins-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.coins-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.coins-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #CBD5E1;
+  transition: 0.22s ease;
+  border-radius: 24px;
+}
+
+.coins-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #FFFFFF;
+  transition: 0.22s ease;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.coins-switch input:checked + .coins-slider {
+  background-color: #1A6B3D;
+}
+
+.coins-switch input:checked + .coins-slider:before {
+  transform: translateX(20px);
+}
+
+.coins-toggle-note {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(20, 33, 44, 0.75);
+  margin: 0;
+}
+
+.coins-toggle-note strong {
+  color: #8C651A;
+}
+
 /* Success Screen Coins Earned Card */
 .checkout-coins-earned-card {
   background: linear-gradient(135deg, #FFF9EB 0%, #F5ECDA 100%);

@@ -20,8 +20,11 @@ export default function CartPageClient() {
   const deliveryCharge = FLAT_DELIVERY_CHARGE;
   const finalTotal = cartTotal + deliveryCharge;
 
-  // Show recommendations ONLY when exactly 1 item is in the cart
-  const shouldShowRecommendations = cart.length === 1;
+  // Unique cashew varieties (if 1 item added multiple times, coin counts only 1 time)
+  const uniqueItemsCount = new Set(
+    cart.map((item) => item.productId || item.name?.split(' (')[0] || item.id)
+  ).size || (cart.length > 0 ? 1 : 0);
+  const totalEarnedCoins = uniqueItemsCount * 83;
 
   // All other catalog items for recommendation carousel (user requested: add all other items)
   const cartProductIds = new Set(cart.map((c) => c.productId));
@@ -428,8 +431,8 @@ export default function CartPageClient() {
                       </svg>
                     </div>
                     <div className="cart-coin-texts">
-                      <span className="cart-coin-earn-title">Earn {cartCount * 83} Original Coins</span>
-                      <span className="cart-coin-earn-desc">{cartCount} {cartCount === 1 ? 'item' : 'items'} × 83 Coins · 100 coins = ₹10 savings value</span>
+                      <span className="cart-coin-earn-title">Earn {totalEarnedCoins} Original Coins</span>
+                      <span className="cart-coin-earn-desc">{uniqueItemsCount} {uniqueItemsCount === 1 ? 'variety' : 'varieties'} × 83 Coins · 100 coins = ₹10 instant discount at checkout</span>
                     </div>
                   </div>
                   <Link href="/wallet" className="cart-coin-wallet-btn">
