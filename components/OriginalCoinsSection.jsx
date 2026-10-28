@@ -22,11 +22,11 @@ export default function OriginalCoinsSection() {
             <span className="sparkle">✦</span>
           </div>
           <h2 className="section-title coins-main-title">
-            1 Delivered Order = 100 Original Coins
+            Every 1 Item in Order = 83 Original Coins
           </h2>
           <p className="coins-header-sub">
-            Every delivered box of Palasa cashews credits 100 Original Coins (worth ₹10) into your wallet.
-            Stack them up — when your wallet reaches 5,000 Coins, redeem a flat <strong>₹500 instant cash discount</strong>!
+            Every item of Palasa cashews credits 83 Original Coins into your wallet (add 1 item = 83 coins, add 2 items = 166 coins).
+            Every 100 Original Coins is worth ₹10 — when your wallet reaches 5,000 Coins, redeem a flat <strong>₹500 instant cash discount</strong>!
           </p>
         </div>
 
@@ -38,10 +38,10 @@ export default function OriginalCoinsSection() {
             <div className="step-icon-bubble">📦</div>
             <h3 className="step-title">Order Any Harvest</h3>
             <p className="step-text">
-              Place your order for fresh Palasa cashews. Once delivered safely to your doorstep, you get <strong>83 Coins</strong> automatically.
+              Place your order for fresh Palasa cashews. For every item or pack in your order, you get <strong>83 Coins</strong> automatically.
             </p>
             <div className="step-formula-pill">
-              <span>1 Delivered Order = </span>
+              <span>Every 1 Item = </span>
               <strong>83 Coins</strong>
             </div>
           </div>
@@ -52,10 +52,10 @@ export default function OriginalCoinsSection() {
             <div className="step-icon-bubble">👛</div>
             <h3 className="step-title">Stacks in Your Wallet</h3>
             <p className="step-text">
-              Every 83 Coins = <strong>₹10 real cash value</strong>. Stored safely in your account with zero expiration and zero gimmicks.
+              Every 100 Coins = <strong>₹10 real cash value</strong>. Stored safely in your account with zero expiration and zero gimmicks.
             </p>
             <div className="step-formula-pill">
-              <span>83 Coins = </span>
+              <span>100 Coins = </span>
               <strong>₹10 Real Cash</strong>
             </div>
           </div>

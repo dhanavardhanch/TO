@@ -428,8 +428,8 @@ export default function CartPageClient() {
                       </svg>
                     </div>
                     <div className="cart-coin-texts">
-                      <span className="cart-coin-earn-title">Earn 100 Original Coins</span>
-                      <span className="cart-coin-earn-desc">₹10 value credited on delivery</span>
+                      <span className="cart-coin-earn-title">Earn {cartCount * 83} Original Coins</span>
+                      <span className="cart-coin-earn-desc">{cartCount} {cartCount === 1 ? 'item' : 'items'} × 83 Coins · 100 coins = ₹10 savings value</span>
                     </div>
                   </div>
                   <Link href="/wallet" className="cart-coin-wallet-btn">

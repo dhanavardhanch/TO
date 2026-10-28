@@ -60,12 +60,15 @@ export default function CheckoutPageClient() {
     cart.forEach((item, idx) => {
       text += `${idx + 1}. ${item.name} (${item.size}) x${item.quantity} = Rs.${item.price * item.quantity}\n`;
     });
+    const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0) || 1;
+    const totalEarnedCoins = totalItemsCount * 83;
+
     if (isLoggedIn) {
       if (coinsDiscount > 0) {
         text += `*Coins Discount Redeemed:* -Rs.500 (5,000 Coins)\n`;
       }
       text += `*Delivery:* ${freeShippingUnlocked ? 'FREE (Order above Rs.999 - Member Perk)' : `Rs.${deliveryCharge}`}\n`;
-      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\n*Original Coins Reward:* +83 Coins (upon delivery)\nPlease confirm and share payment details.`;
+      text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\n*Original Coins Reward:* +${totalEarnedCoins} Coins (${totalItemsCount} items × 83 Coins · 100 coins = Rs.10)\nPlease confirm and share payment details.`;
     } else {
       text += `*Delivery:* Rs.${deliveryCharge}\n`;
       text += `\n*Total:* Rs.${finalTotal.toLocaleString('en-IN')}\nPlease confirm and share payment details.`;
@@ -76,14 +79,14 @@ export default function CheckoutPageClient() {
     const orderId = `TO-${orderNum}`;
 
     if (isLoggedIn) {
-      // Credit 83 Original Coins for the order into wallet (83 coins = Rs 10)
-      addCoins(83, orderId);
+      // Credit 83 Original Coins per item in the order into wallet (100 coins = Rs 10)
+      addCoins(totalEarnedCoins, orderId);
       if (coinsDiscount > 0) {
         redeemCoins(orderId);
       }
       setEarnedSummary({
-        addedCoins: 83,
-        newTotal: coinsDiscount > 0 ? (coins - 5000 + 83) : (coins + 83),
+        addedCoins: totalEarnedCoins,
+        newTotal: coinsDiscount > 0 ? (coins - 5000 + totalCoinsEarned) : (coins + totalCoinsEarned),
         orderId,
       });
     } else {
@@ -123,9 +126,9 @@ export default function CheckoutPageClient() {
                   </svg>
                 </div>
                 <div className="coin-earned-content">
-                  <h3 className="coin-earned-title">+83 Original Coins Credited to Your Wallet!</h3>
+                  <h3 className="coin-earned-title">+{earnedSummary?.addedCoins || 83} Original Coins Credited to Your Wallet!</h3>
                   <p className="coin-earned-text">
-                    Order <strong>#{earnedSummary?.orderId}</strong> reward recorded. Your current balance is now <strong>{earnedSummary?.newTotal.toLocaleString('en-IN') || (coins + 83)} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || (coins + 83)) / 83) * 10)} value).
+                    Order <strong>#{earnedSummary?.orderId}</strong> reward recorded ({earnedSummary?.addedCoins} Coins at 83 Coins/item). Your current balance is now <strong>{earnedSummary?.newTotal.toLocaleString('en-IN') || (coins + 83)} Coins</strong> (₹{Math.round(((earnedSummary?.newTotal || (coins + 83)) / 100) * 10)} value).
                     When your wallet reaches 5,000 Coins, you unlock a flat ₹500 discount!
                   </p>
                   <Link
@@ -140,9 +143,9 @@ export default function CheckoutPageClient() {
               <div className="checkout-coins-earned-card checkout-guest-claim-card">
                 <div className="coin-earned-icon">🪙</div>
                 <div className="coin-earned-content">
-                  <h3 className="coin-earned-title">Claim Your 183 Original Coins!</h3>
+                  <h3 className="coin-earned-title">Claim Your {100 + (earnedSummary?.addedCoins || 83)} Original Coins!</h3>
                   <p className="coin-earned-text">
-                    Sign in with the phone or email used for this order to receive your <strong>100 Welcome Coins</strong> plus <strong>83 Order Reward Coins</strong>!
+                    Sign in with the phone or email used for this order to receive your <strong>100 Welcome Coins</strong> plus <strong>{earnedSummary?.addedCoins || 83} Order Reward Coins</strong> (100 coins = ₹10)!
                   </p>
                   <button
                     type="button"
@@ -333,7 +336,15 @@ export default function CheckoutPageClient() {
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                       </svg>
-                      <span>Earn <strong>+83 Original Coins</strong> (₹10 value) upon delivery!</span>
+                      {(() => {
+                        const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0) || 1;
+                        const earn = totalQty * 83;
+                        return (
+                          <span>
+                            Earn <strong>+{earn} Original Coins</strong> ({totalQty} {totalQty === 1 ? 'item' : 'items'} × 83 Coins · 100 coins = ₹10) upon delivery!
+                          </span>
+                        );
+                      })()}
                     </div>
 
                     {canRedeemCoins ? (

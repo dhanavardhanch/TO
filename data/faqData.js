@@ -42,7 +42,7 @@ export const HOMEPAGE_FAQS = [
     id: 'faq-home-6',
     question: 'What are Original Coins and how do I earn and redeem them?',
     answer:
-      'Original Coins is our exclusive customer loyalty program. Every completed order automatically credits 100 Original Coins into your digital wallet upon verified delivery (worth ₹10 value). Once you reach 5,000 coins, you can instantly redeem a flat ₹500 voucher on your checkout order in a single click.',
+      'Original Coins is our exclusive customer loyalty program. For every item or pack in your order, you automatically receive 83 Original Coins upon delivery (for example, 1 item = 83 coins, 2 items = 166 coins). Every 100 Original Coins is worth ₹10. Once you reach 5,000 coins, you can instantly redeem a flat ₹500 voucher on your checkout order in a single click.',
     category: 'Rewards & Wallet',
   },
   {

@@ -176,7 +176,7 @@ export default function Products() {
                       <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
                       <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
                     </svg>
-                    <span className="coins-perk-text">Earn <strong>100 Original Coins</strong> (₹10 value)</span>
+                    <span className="coins-perk-text">Earn <strong>83 Original Coins</strong> (100 coins = ₹10)</span>
                   </div>
 
                   <div className="product-actions-grid">
