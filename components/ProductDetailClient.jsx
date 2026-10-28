@@ -462,6 +462,16 @@ export default function ProductDetailClient({ product }) {
               </div>
             </div>
 
+            {/* Original Coins Reward Perk Banner */}
+            <div className="product-coins-perk pdp-coins-perk">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                <path d="M16 3H4a2 2 0 0 0-2 2v2"></path>
+                <circle cx="16" cy="14" r="1.5" fill="currentColor"></circle>
+              </svg>
+              <span className="coins-perk-text">Earn <strong>100 Original Coins</strong> (₹10 value) upon delivery</span>
+            </div>
+
             {/* Quantity Selector & Primary Actions */}
             <div className="pdp-actions-row">
               <div className="pdp-qty-stepper">
