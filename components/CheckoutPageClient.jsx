@@ -382,41 +382,25 @@ export default function CheckoutPageClient() {
                       </Link>
                     </div>
 
-                    {/* Instant Coins Discount Toggle */}
+                    {/* Simple 1-line Toggle */}
                     {canUseInstantCoins && (
-                      <div className="coins-instant-toggle-card">
-                        <div className="coins-toggle-header">
-                          <div className="coins-toggle-info">
-                            <div className="coins-toggle-title-wrap">
-                              <span className="coins-toggle-badge">⚡ Coins Discount</span>
-                              <span className="coins-toggle-title">Use 100 Coins for ₹10 OFF</span>
-                            </div>
-                            <p className="coins-toggle-sub">
-                              {useCoinsDiscount ? (
-                                <>
-                                  100 Coins applied for <strong>₹10 instant discount</strong>.
-                                  {remainingCoinsToWallet > 0 ? (
-                                    <> Rest <strong>+{remainingCoinsToWallet} Coins</strong> will be added to your wallet upon delivery!</>
-                                  ) : (
-                                    <> Remaining coins will be added upon delivery.</>
-                                  )}
-                                </>
-                              ) : (
-                                <>
-                                  Toggle ON to save ₹10 right now, or keep full <strong>+{totalEarnedCoins} Coins</strong> in wallet for bigger discounts!
-                                </>
-                              )}
-                            </p>
-                          </div>
-                          <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
-                            <input
-                              type="checkbox"
-                              checked={useCoinsDiscount}
-                              onChange={(e) => setUseCoinsDiscount(e.target.checked)}
-                            />
-                            <span className="coins-slider"></span>
-                          </label>
+                      <div className="coins-toggle-inline-row">
+                        <div className="coins-toggle-inline-left">
+                          <span className="coins-toggle-inline-title">Use 100 Coins for ₹10 discount</span>
+                          <span className="coins-toggle-inline-sub">
+                            {useCoinsDiscount
+                              ? `Rest +${remainingCoinsToWallet} coins will add to wallet`
+                              : `Full +${totalEarnedCoins} coins will add to wallet`}
+                          </span>
                         </div>
+                        <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
+                          <input
+                            type="checkbox"
+                            checked={useCoinsDiscount}
+                            onChange={(e) => setUseCoinsDiscount(e.target.checked)}
+                          />
+                          <span className="coins-slider"></span>
+                        </label>
                       </div>
                     )}
 
@@ -457,34 +441,23 @@ export default function CheckoutPageClient() {
                 ) : (
                   <div className="checkout-coins-summary-box checkout-signin-prompt-card">
                     {canUseInstantCoins && (
-                      <div className="coins-instant-toggle-card" style={{ marginBottom: 14 }}>
-                        <div className="coins-toggle-header">
-                          <div className="coins-toggle-info">
-                            <div className="coins-toggle-title-wrap">
-                              <span className="coins-toggle-badge">⚡ Coins Discount</span>
-                              <span className="coins-toggle-title">Use 100 Coins for ₹10 OFF</span>
-                            </div>
-                            <p className="coins-toggle-sub">
-                              {useCoinsDiscount ? (
-                                <>
-                                  100 Coins applied for <strong>₹10 instant discount</strong>. Sign in below or after order to receive rest <strong>+{remainingCoinsToWallet} Coins</strong> in your wallet!
-                                </>
-                              ) : (
-                                <>
-                                  Toggle ON to save ₹10 now with 100 Coins!
-                                </>
-                              )}
-                            </p>
-                          </div>
-                          <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
-                            <input
-                              type="checkbox"
-                              checked={useCoinsDiscount}
-                              onChange={(e) => setUseCoinsDiscount(e.target.checked)}
-                            />
-                            <span className="coins-slider"></span>
-                          </label>
+                      <div className="coins-toggle-inline-row" style={{ marginBottom: 12 }}>
+                        <div className="coins-toggle-inline-left">
+                          <span className="coins-toggle-inline-title">Use 100 Coins for ₹10 discount</span>
+                          <span className="coins-toggle-inline-sub">
+                            {useCoinsDiscount
+                              ? `Rest +${remainingCoinsToWallet} coins can be claimed into wallet`
+                              : `Full +${totalEarnedCoins} coins can be claimed into wallet`}
+                          </span>
                         </div>
+                        <label className="coins-switch" aria-label="Toggle ₹10 coins discount">
+                          <input
+                            type="checkbox"
+                            checked={useCoinsDiscount}
+                            onChange={(e) => setUseCoinsDiscount(e.target.checked)}
+                          />
+                          <span className="coins-slider"></span>
+                        </label>
                       </div>
                     )}
                     <div className="signin-prompt-header">
